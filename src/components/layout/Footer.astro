@@ -1,0 +1,141 @@
+---
+import { SOCIAL_LINKS } from '../../lib/constants';
+
+const currentYear = new Date().getFullYear();
+
+const footerColumns = [
+  {
+    title: 'Learn',
+    links: [
+      { label: 'Start Here', href: '/learn/start-here' },
+      { label: 'Foundations', href: '/learn/foundations' },
+      { label: 'Mechanics', href: '/learn/mechanics' },
+      { label: 'Advanced', href: '/learn/advanced' },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'Blog', href: '/blog' },
+      { label: 'Tools', href: '/tools' },
+      { label: 'Videos', href: '/resources/videos' },
+      { label: 'Books', href: '/resources/books' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'About', href: '/about' },
+      { label: 'Newsletter', href: '/newsletter' },
+      { label: 'Academy', href: '/academy' },
+    ],
+  },
+];
+
+const legalLinks = [
+  { label: 'Disclaimer', href: '/legal/disclaimer' },
+  { label: 'Privacy Policy', href: '/legal/privacy' },
+];
+---
+
+<footer class="bg-[#0F1D35] text-white" role="contentinfo">
+  <div class="content-width py-16 lg:py-20">
+    <!-- Top Section: Logo + Columns -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
+      <!-- Brand Column -->
+      <div class="lg:col-span-2">
+        <a
+          href="/"
+          class="inline-block text-2xl font-bold tracking-tight text-white hover:text-white no-underline"
+          style="font-family: var(--font-heading);"
+        >
+          IBC Academy
+        </a>
+        <p class="mt-4 text-white/70 text-base leading-relaxed max-w-sm">
+          Free education on the Infinite Banking Concept. Master IBC through
+          structured learning paths, interactive tools, and expert guidance.
+        </p>
+
+        <!-- Newsletter Signup Placeholder -->
+        <div class="mt-6">
+          <p class="text-sm font-medium text-white/80 mb-2">Stay updated</p>
+          <p class="text-sm text-white/50">
+            Newsletter signup coming soon.
+            <a href="/newsletter" class="text-[var(--color-gold)] hover:text-[var(--color-gold-light)] no-underline">
+              Learn more
+            </a>
+          </p>
+        </div>
+
+        <!-- Social Links -->
+        <div class="mt-6 flex items-center gap-4">
+          <a
+            href={SOCIAL_LINKS.skool}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-[var(--color-gold)] transition-colors no-underline"
+            aria-label="Join our Skool community"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6zm4 4h-2v-2h2v2zm0-4h-2V7h2v6z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Link Columns -->
+      {footerColumns.map((column) => (
+        <div>
+          <h3 class="text-sm font-semibold uppercase tracking-wider text-white/50 mb-4" style="font-family: var(--font-body);">
+            {column.title}
+          </h3>
+          <ul class="space-y-3 list-none p-0 m-0">
+            {column.links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-base text-white/70 hover:text-[var(--color-gold-light)] transition-colors no-underline"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <!-- Divider -->
+    <hr class="my-10 border-white/10" />
+
+    <!-- Bottom Section: Legal + Copyright -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-6">
+        {legalLinks.map((link) => (
+          <a
+            href={link.href}
+            class="text-sm text-white/50 hover:text-white/80 transition-colors no-underline"
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+      <p class="text-sm text-white/40">
+        &copy; {currentYear} IBC Academy. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer a {
+    text-decoration: none;
+  }
+</style>

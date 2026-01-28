@@ -1,0 +1,114 @@
+---
+interface Props {
+  title?: string;
+  subtitle?: string;
+  background?: 'white' | 'cream' | 'navy';
+  class?: string;
+  id?: string;
+}
+
+const {
+  title,
+  subtitle,
+  background = 'white',
+  class: className = '',
+  id,
+} = Astro.props;
+
+const backgroundStyles: Record<string, string> = {
+  white: 'section-bg-white',
+  cream: 'section-bg-cream',
+  navy: 'section-bg-navy',
+};
+
+const isNavy = background === 'navy';
+---
+
+<section
+  class:list={['section', backgroundStyles[background], className]}
+  id={id}
+>
+  <div class="section-container">
+    {title && (
+      <div class="section-header">
+        <h2 class:list={['section-title', { 'section-title-light': isNavy }]}>
+          {title}
+        </h2>
+        {subtitle && (
+          <p class:list={['section-subtitle', { 'section-subtitle-light': isNavy }]}>
+            {subtitle}
+          </p>
+        )}
+      </div>
+    )}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    padding: 4rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .section {
+      padding: 6rem 0;
+    }
+  }
+
+  .section-bg-white {
+    background-color: #ffffff;
+  }
+
+  .section-bg-cream {
+    background-color: var(--color-cream, #FBF8F3);
+  }
+
+  .section-bg-navy {
+    background-color: var(--color-navy, #1B2A4A);
+  }
+
+  .section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--color-navy, #1B2A4A);
+    margin: 0 0 1rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .section-title {
+      font-size: 3rem;
+    }
+  }
+
+  .section-title-light {
+    color: #ffffff;
+  }
+
+  .section-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 auto;
+    max-width: 700px;
+  }
+
+  .section-subtitle-light {
+    color: rgba(255, 255, 255, 0.8);
+  }
+</style>

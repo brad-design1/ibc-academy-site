@@ -1,0 +1,185 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import Section from '../../components/sections/Section.astro';
+import SplitContent from '../../components/sections/SplitContent.astro';
+import CTABanner from '../../components/sections/CTABanner.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+import ScrollReveal from '../../components/animation/ScrollReveal.astro';
+---
+
+<PageLayout
+  title="Start Here — Your IBC Journey Begins | IBC Academy"
+  description="New to the Infinite Banking Concept? Start here. Learn the fundamentals, choose your learning path, and begin your journey to becoming your own banker."
+>
+  <!-- Intro Section -->
+  <Section background="cream">
+    <ScrollReveal direction="up">
+      <div class="intro-content">
+        <h1 class="intro-title">Start Here: Your Guide to the Infinite Banking Concept</h1>
+        <p class="intro-text">
+          Welcome to IBC Academy — your free, comprehensive resource for mastering the Infinite
+          Banking Concept. Here you'll find structured learning paths, in-depth lessons, real-world
+          case studies, and interactive tools designed to help you understand how to recapture the
+          banking function in your life.
+        </p>
+        <p class="intro-text">
+          Whether you've just heard about IBC or you've been curious for years, this is the place to begin.
+        </p>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- What You'll Learn -->
+  <Section title="What You'll Learn">
+    <ScrollReveal direction="up">
+      <SplitContent
+        title="The Infinite Banking Concept"
+        description="The Infinite Banking Concept, created by Nelson Nash, is a strategy for recapturing the banking function in your life. Instead of financing major purchases through traditional banks — and paying them interest — you learn to become your own banker using dividend-paying whole life insurance from mutual companies."
+        imageSrc="/images/byob-book-cover.jpg"
+        imageAlt="Becoming Your Own Banker by R. Nelson Nash — the foundational book on the Infinite Banking Concept"
+        imagePosition="left"
+        ctaText="Learn the Basics"
+        ctaHref="/learn/start-here"
+      />
+    </ScrollReveal>
+  </Section>
+
+  <!-- Learning Path Cards -->
+  <Section title="Choose Your Path" subtitle="Three structured learning paths to take you from beginner to advanced IBC practitioner." background="cream">
+    <div class="paths-grid">
+      <ScrollReveal direction="up" delay={0}>
+        <Card
+          title="Core Concepts (8 Lessons)"
+          description="Start with the basics. Learn about the banking function, the grocery store analogy, the five human problems, and more. These fundamentals are essential before moving forward."
+          badge="Beginner"
+          href="/learn/start-here"
+        />
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={150}>
+        <Card
+          title="Policy Mechanics (6 Lessons)"
+          description="Understand how whole life insurance actually works: base premiums, PUA, dividends, policy loans, and the difference between direct and non-direct recognition companies."
+          badge="Intermediate"
+          href="/learn/start-here"
+        />
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={300}>
+        <Card
+          title="Advanced Strategies (5 Lessons)"
+          description="Take your IBC knowledge to the next level with family banking, business applications, real estate strategies, and multi-generational wealth building."
+          badge="Advanced"
+          href="/learn/start-here"
+        />
+      </ScrollReveal>
+    </div>
+  </Section>
+
+  <!-- Where Should You Begin? -->
+  <Section title="Where Should You Begin?">
+    <ScrollReveal direction="up">
+      <div class="begin-content">
+        <p class="begin-text">
+          If you're completely new to IBC, start with the <strong>Foundations</strong> path. These
+          eight lessons cover everything you need to understand before diving into the mechanics of
+          policy design. You'll learn why traditional banking puts you at a disadvantage, how the
+          Infinite Banking Concept flips the script, and what Nelson Nash meant when he said
+          "don't be afraid to be your own banker."
+        </p>
+        <p class="begin-text">
+          If you already understand the basics and want to learn how whole life policies are
+          structured, jump to <strong>Policy Mechanics</strong>. And if you've been practicing IBC
+          and want to explore advanced applications — family banking, business uses, or real estate
+          strategies — head straight to <strong>Advanced Strategies</strong>.
+        </p>
+        <div class="begin-cta">
+          <Button variant="primary" size="lg" href="/learn/start-here">
+            Begin with Foundations
+          </Button>
+        </div>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- CTA Banner -->
+  <CTABanner
+    heading="Ready to Go Deeper?"
+    description="Join the free IBC Academy classroom on Skool for structured learning with 500+ fellow students."
+    buttonText="Join the Classroom"
+    buttonHref="https://skool.com/ibc-academy"
+  />
+</PageLayout>
+
+<style>
+  .intro-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .intro-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--color-navy, #1B2A4A);
+    margin: 0 0 1.5rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .intro-title {
+      font-size: 3.25rem;
+    }
+  }
+
+  .intro-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 1rem 0;
+  }
+
+  .intro-text:last-child {
+    margin-bottom: 0;
+  }
+
+  .paths-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .paths-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  .begin-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .begin-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 1rem 0;
+  }
+
+  .begin-text strong {
+    color: var(--color-navy, #1B2A4A);
+    font-weight: 600;
+  }
+
+  .begin-cta {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+  }
+</style>

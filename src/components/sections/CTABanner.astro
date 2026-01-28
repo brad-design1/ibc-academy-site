@@ -1,0 +1,118 @@
+---
+import Button from '../ui/Button.astro';
+
+interface Props {
+  heading: string;
+  description: string;
+  buttonText: string;
+  buttonHref: string;
+  variant?: 'gold' | 'navy';
+}
+
+const {
+  heading,
+  description,
+  buttonText,
+  buttonHref,
+  variant = 'navy',
+} = Astro.props;
+
+const isGold = variant === 'gold';
+---
+
+<section class:list={['cta-banner', isGold ? 'cta-banner-gold' : 'cta-banner-navy']}>
+  <div class="cta-container">
+    <div class="cta-inner">
+      <h2 class="cta-heading">{heading}</h2>
+      <p class="cta-description">{description}</p>
+      <div class="cta-action">
+        {isGold ? (
+          <Button variant="secondary" size="lg" href={buttonHref}>
+            {buttonText}
+          </Button>
+        ) : (
+          <Button variant="primary" size="lg" href={buttonHref}>
+            {buttonText}
+          </Button>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-banner {
+    padding: 4rem 0;
+  }
+
+  .cta-banner-navy {
+    background-color: var(--color-navy, #1B2A4A);
+  }
+
+  .cta-banner-gold {
+    background-color: var(--color-gold, #C8962E);
+  }
+
+  .cta-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .cta-inner {
+    border-radius: 0.5rem;
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .cta-inner {
+      padding: 4rem 3rem;
+    }
+  }
+
+  .cta-heading {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin: 0 0 1rem 0;
+  }
+
+  .cta-banner-navy .cta-heading {
+    color: #ffffff;
+  }
+
+  .cta-banner-gold .cta-heading {
+    color: var(--color-navy, #1B2A4A);
+  }
+
+  @media (min-width: 768px) {
+    .cta-heading {
+      font-size: 2.5rem;
+    }
+  }
+
+  .cta-description {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    margin: 0 auto 2rem auto;
+    max-width: 600px;
+  }
+
+  .cta-banner-navy .cta-description {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .cta-banner-gold .cta-description {
+    color: var(--color-navy, #1B2A4A);
+    opacity: 0.9;
+  }
+
+  .cta-action {
+    display: flex;
+    justify-content: center;
+  }
+</style>

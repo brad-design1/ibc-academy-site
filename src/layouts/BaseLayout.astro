@@ -1,0 +1,84 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import { formatTitle } from '../lib/seo';
+import { SITE_NAME, SITE_URL, PLAUSIBLE_DOMAIN } from '../lib/constants';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+}
+
+const {
+  title,
+  description,
+  ogImage = '/images/og-default.jpg',
+  canonicalUrl,
+} = Astro.props;
+
+const formattedTitle = formatTitle(title);
+const canonical = canonicalUrl || new URL(Astro.url.pathname, SITE_URL).href;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : new URL(ogImage, SITE_URL).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{formattedTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={formattedTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={formattedTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Font Preloads — self-hosted, no external CDN -->
+    <link
+      rel="preload"
+      href="/fonts/playfair-display-700.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/inter-400.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- Plausible Analytics (only if PLAUSIBLE_DOMAIN is set) -->
+    {PLAUSIBLE_DOMAIN && (
+      <script
+        defer
+        data-domain={PLAUSIBLE_DOMAIN}
+        src="https://plausible.io/js/script.js"
+      />
+    )}
+
+    <!-- Astro View Transitions -->
+    <ViewTransitions />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

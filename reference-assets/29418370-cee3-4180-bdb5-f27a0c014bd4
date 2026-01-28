@@ -1,0 +1,431 @@
+# Architecture Audit: ibcacademy.org & 1322legacystrategies.com
+
+> Audit methodology adapted from `prompts/architecture-audit.md`
+> Source document: `docs/WEBSITE-ARCHITECTURE.md` (v1.0, 2026-01-28)
+> Audit date: 2026-01-27
+> Auditor: Mabel (Architecture Audit)
+
+---
+
+## 1. Executive Summary
+
+### Overall Health: SOLID with manageable gaps
+
+The website architecture document is thorough, well-structured, and demonstrates strong strategic thinking. The two-site funnel design is sound. The technology choices (Astro 5, Tailwind v4, React islands, Vercel) are appropriate for the stated goals. The architecture errs on the side of simplicity, which is correct for a two-person build team.
+
+However, several architectural decisions are deferred (marked "Option A or Option B"), the testing strategy has significant gaps, and the form security model needs hardening before collecting PII from prospects.
+
+### Top 3 Risks
+
+1. **P0 — Intake form PII handling has no server-side validation, rate limiting, or abuse protection.** The form collects sensitive personal data (legal name, phone, email, age, marital status, employment, insurance licensing) and routes it through Formspree to Notion. There is no server-side validation, no CAPTCHA, no rate limiting, and no data retention policy documented. This is the most critical path on the advisory site and handles the most sensitive data.
+
+2. **P1 — Multiple undecided integrations create schedule risk.** The architecture lists "Option A or Option B" for form processing (Formspree vs Astro API routes), email service (ConvertKit vs Resend), and CRM routing (email + Notion vs Notion API). These are not cosmetic choices — they affect the data flow, build configuration, and deployment model. Deferring them into development means the developer will make architectural decisions that should be made by the architect.
+
+3. **P1 — No automated testing beyond Lighthouse CI.** Zero unit tests, zero integration tests, zero E2E tests. The calculators perform financial computations that users will act on. The intake form has conditional logic and triage rules. The content schema has typed validation. None of this is tested. Lighthouse CI catches performance and accessibility regressions but not functional correctness.
+
+### Top 3 Strengths
+
+1. **Clear strategic separation between education and advisory.** The funnel architecture is well-designed: ibcacademy.org never sells, 1322legacystrategies.com never educates broadly. The compliance constraint (lowkey advisory site, no social media) is baked into the architecture, not bolted on. The robots.txt, sitemap exclusion, and navigation design all enforce this.
+
+2. **Islands architecture is correctly applied.** React is restricted to genuinely interactive components (forms, calculators, filters). Static content ships zero JavaScript. The hydration directives (`client:visible` for lazy, `client:load` for critical) are assigned appropriately. The JS budget per page type is documented and realistic.
+
+3. **Performance architecture is aggressive and achievable.** Lighthouse 100 targets with SSG output, zero JS on content pages, self-hosted fonts, AVIF/WebP image optimization, and Pagefind for search is a strong combination. The 95+ CI gate is the right enforcement mechanism.
+
+---
+
+## 2. Architecture Diagram
+
+```
+                         EXTERNAL SURFACES
+    ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
+    │Instagram │  │ Facebook │  │    X     │  │ YouTube  │
+    │@ibcacademy│ │@ibcacademy│ │@theibcacademy│ │@ibcacademy│
+    └─────┬────┘  └─────┬────┘  └─────┬────┘  └─────┬────┘
+          │             │             │              │
+          └─────────────┼─────────────┼──────────────┘
+                        │  UTM links  │
+                        ▼             ▼
+    ┌──────────────────────────────────────────────────────┐
+    │              ibcacademy.org  (Astro SSG)              │
+    │  ┌──────────────────────────────────────────────┐    │
+    │  │  STATIC LAYER (0 JS)                          │    │
+    │  │  Layouts → Sections → UI Components           │    │
+    │  │  /learn/* │ /blog/* │ /resources/* │ /about   │    │
+    │  └──────────────────────────────────────────────┘    │
+    │  ┌──────────────────────────────────────────────┐    │
+    │  │  ISLAND LAYER (React, lazy-loaded)            │    │
+    │  │  Calculators │ Newsletter │ Webinar │ Filter  │    │
+    │  └──────────────────────────────────────────────┘    │
+    │  ┌──────────────────────────────────────────────┐    │
+    │  │  ANIMATION LAYER (CSS + vanilla JS)           │    │
+    │  │  ScrollReveal │ CountUp │ ViewTransitions     │    │
+    │  └──────────────────────────────────────────────┘    │
+    └──────────┬──────────────────────────┬────────────────┘
+               │ Skool CTA               │ Footer link
+               ▼                          │
+    ┌────────────────────┐                │
+    │  Skool Classroom   │                │
+    │  19-module IBC     │                │
+    │  curriculum         │                │
+    └────────┬───────────┘                │
+             │ Exit CTA                   │
+             ▼                            ▼
+    ┌──────────────────────────────────────────────────────┐
+    │        1322legacystrategies.com  (Astro SSG)         │
+    │  ┌──────────────────────────────────────────────┐    │
+    │  │  STATIC LAYER (0 JS)                          │    │
+    │  │  /about │ /journey/* │ /faq │ /resources      │    │
+    │  └──────────────────────────────────────────────┘    │
+    │  ┌──────────────────────────────────────────────┐    │
+    │  │  ISLAND LAYER (React, eager-loaded)           │    │
+    │  │  IntakeForm (multi-step, Zod, Framer Motion)  │    │
+    │  └──────────────────────────────────────────────┘    │
+    └──────────┬──────────────────────────┬────────────────┘
+               │                          │
+               ▼                          ▼
+    ┌──────────────────┐       ┌──────────────────┐
+    │  Formspree /     │       │  Plausible       │
+    │  Astro API Route │       │  Analytics       │
+    └────────┬─────────┘       └──────────────────┘
+             │
+        ┌────┴────┐
+        ▼         ▼
+    ┌────────┐ ┌────────┐
+    │ Brad's │ │ Notion │
+    │ Email  │ │  CRM   │
+    └────────┘ └────┬───┘
+                    │
+                    ▼
+              ┌──────────┐
+              │  Triage  │
+              │ G/Y/R    │
+              └──────────┘
+
+    HOSTING: Vercel (team: chrix-5697)
+    REPOS:   github.com/L0v3Chrix/ibc-academy-site
+             github.com/L0v3Chrix/1322-legacy-site
+    DNS:     ibcacademy.org → Vercel
+             1322legacystrategies.com → Vercel
+```
+
+---
+
+## 3. Detailed Findings
+
+---
+
+### 3.1 Two-Site Separation & Component Boundaries
+
+**Current State:**
+Two separate GitHub repositories, two separate Astro projects, two separate Vercel deployments. Shared design DNA through common gold/cream color tokens and similar component patterns (Button, Card, ScrollReveal), but distinct brand identities (Playfair Display + Inter vs Cormorant Garamond + Source Sans 3). Phase 1 copies components between repos; Phase 2 envisions a shared `@ibc/ui` npm package.
+
+**Strengths:**
+- The two-repo strategy is correct for this project. The sites have different content models (IBC Academy has Content Collections for learn/blog/case-studies/glossary; 1322 Legacy has none), different build configurations (MDX, sitemap, Pagefind on Academy only), and different deployment cadences (Academy publishes 3-4x/week; Legacy is stable after launch). A monorepo would add complexity without proportional benefit.
+- The funnel boundaries are clean. Navigation, footer links, robots.txt, and SEO strategy all enforce the education/advisory split. The architecture document explicitly states the advisory site has "no social links; prospects arrive via funnel" — this is embedded in the site map, not just policy.
+- The component sharing strategy is pragmatic. Copying ~10 simple components between two repos is less costly than maintaining a shared package for a two-developer team. The trigger for extraction ("both sites live, components API-stable, maintenance burden exceeds setup cost") is the right decision framework.
+
+**Risks:**
+- **Drift between shared components (P2).** When Button or ScrollReveal gets a bug fix or enhancement in one repo, the other repo doesn't automatically receive it. With only ~10 shared components, this is manageable but should be tracked. The architecture document doesn't specify a process for keeping shared components in sync.
+- **Cross-site link fragility (P2).** The dependency map (Section 15.1) shows 5+ cross-site links. If either site changes its URL structure, the other site breaks. There's no link validation across repos.
+
+**Recommendations:**
+- **P2:** Establish a simple changelog or Notion tracker for shared component versions. When a component changes in one repo, log it and port the change.
+- **P2:** Add a cross-site link check to the CI pipeline of both repos. A simple script that fetches the linked URLs and asserts 200 responses. This can be a GitHub Action cron job running weekly.
+
+---
+
+### 3.2 Client-Side State, Form Data, & User Journey
+
+**Current State:**
+Three types of client-side state are specified:
+1. **Learning progress** — localStorage tracks anonymous progress through /learn/* pages (IBC Academy)
+2. **Intake form progress** — localStorage persists partially-completed form data (1322 Legacy)
+3. **Dark mode preference** — localStorage stores manual theme toggle (IBC Academy)
+
+No user accounts in v1. No server-side session management. Cross-site journey tracking relies entirely on UTM parameters.
+
+**Strengths:**
+- Anonymous learning progress via localStorage is the right approach for v1. It avoids the complexity of user accounts while still providing value (progress indicators on learning path cards). The architecture acknowledges this is device-bound and defers cross-device sync to a future "Member portal" enhancement (Appendix C).
+- UTM parameter strategy is well-documented (Section 12.4) with consistent naming conventions across all traffic sources. This enables Brad to trace the full funnel: Instagram post → ibcacademy.org → Skool → 1322legacystrategies.com.
+
+**Risks:**
+- **P1 — Intake form localStorage stores PII in the clear.** Section 5.3 states the form uses "localStorage for progress persistence" and "No data stored in browser beyond session." These contradict each other. localStorage persists beyond the session (it survives tab/browser close). If a prospect partially fills the form on a shared/public computer, their legal name, phone number, email, age, and marital status remain in localStorage until explicitly cleared. The architecture says "All form data encrypted in transit (HTTPS)" but says nothing about at-rest protection in localStorage.
+- **P2 — Learning progress loss on browser clear or device switch.** Users who clear their browser data or switch devices lose all progress. This is acceptable for v1 but should be communicated to users (e.g., "Progress is saved on this device only").
+- **P2 — No cross-site journey continuity.** A user who goes ibcacademy.org → Skool → 1322legacystrategies.com has no persistent identity. The intake form asks "How did you hear about us?" (attribution) but relies on self-reporting, not tracked data. UTM parameters are lost at the Skool hop unless Skool preserves them in outbound links.
+
+**Recommendations:**
+- **P1:** For the intake form, use sessionStorage instead of localStorage. sessionStorage is cleared when the tab closes, which matches the stated intent ("No data stored in browser beyond session"). If multi-session persistence is desired, encrypt the data before storing or limit localStorage to non-PII fields (current step number, non-sensitive selections).
+- **P2:** Add a visible notice on /learn pages: "Your progress is saved on this device. Create a free account to sync across devices." (placeholder for future member portal).
+- **P2:** Investigate whether Skool outbound links can carry UTM parameters. If not, document this gap in the analytics plan and accept self-reported attribution as the primary signal.
+
+---
+
+### 3.3 Form Security, Data Handling, & Compliance
+
+**Current State:**
+The intake form at /get-started collects: legal first/middle/last name, preferred name, phone, email, U.S. citizenship status, state of residence, age, marital status, employment status, insurance licensing status, BYOB ownership, classroom completion, existing life insurance, financial goals (free text), motivation (free text), referral source, educational experience, self-assessment, scheduling preference, and open-ended notes. This is submitted via Formspree or Astro API routes to Brad's email and a Notion database.
+
+Newsletter signup on IBC Academy captures email only.
+
+**Strengths:**
+- Zod validation schemas are defined for form steps, providing structured client-side validation.
+- The triage rules (GREEN/YELLOW/RED) are well-thought-out, particularly the insurance licensing red flag and the self-assessment mismatch detection.
+- The form step design (5 steps with progressive disclosure) reduces abandonment and groups related fields logically.
+
+**Risks:**
+- **P0 — No server-side validation.** The architecture specifies Zod validation on the client only. Client-side validation is trivially bypassed. A malicious actor could submit arbitrary data to the Formspree endpoint or API route. This matters because the data feeds into Brad's triage workflow — garbage data wastes his time, and injected content (e.g., XSS in the "goals" textarea) could execute in Notion or email clients.
+- **P0 — No rate limiting or abuse protection.** The form endpoint has no CAPTCHA, no honeypot field, no rate limiting. Formspree provides basic spam filtering, but the architecture doesn't mention enabling it. If using Astro API routes instead, there's no abuse protection whatsoever.
+- **P1 — No data retention policy.** The architecture doesn't specify how long form submissions are retained in Notion, who has access, or how they're deleted. For a financial services site collecting this level of PII, a data retention policy is prudent even if not legally required (Brad isn't subject to GDPR for U.S.-only prospects, but state privacy laws like CCPA may apply depending on prospect location).
+- **P1 — Free-text fields without sanitization.** The "Primary Financial Goal" (1000 char) and "What caused you to reach out?" (2000 char) fields accept arbitrary text. If this text is rendered in Notion or email without sanitization, it's an injection vector.
+- **P1 — Formspree as a data processor.** If using Formspree, prospect PII transits through a third party. The architecture doesn't mention a Data Processing Agreement (DPA) with Formspree, or whether Formspree's own data retention and privacy practices align with Brad's obligations.
+- **P2 — Calculator disclaimer adequacy.** The Interest Bleed Calculator, Family Bank Projector, and Opportunity Cost Calculator all include disclaimers ("educational purposes only"), but the architecture doesn't specify where the disclaimer appears (before input? below results? in a modal?). Compliance note in Appendix B says "All interactive tools must include" the disclaimer — the implementation should make it impossible to see results without seeing the disclaimer.
+
+**Recommendations:**
+- **P0:** Add server-side validation regardless of form backend choice. If using Formspree, enable their built-in validation rules and spam protection (reCAPTCHA or honeypot). If using Astro API routes, implement Zod validation server-side, add rate limiting (e.g., Vercel Edge middleware with IP-based limits), and add a honeypot field.
+- **P0:** Add a honeypot field to the intake form. This is trivial to implement and blocks most automated spam without degrading UX.
+- **P1:** Document a data retention policy: how long submissions are kept in Notion, who has access (Brad only? Mabel? Chris?), and the deletion process.
+- **P1:** Sanitize free-text fields before rendering anywhere. Use a library like DOMPurify if rendering in HTML, or ensure Notion API escapes content on ingestion.
+- **P1:** If using Formspree, review their DPA and privacy policy. Document the decision in the architecture.
+- **P2:** Ensure calculator disclaimers are displayed inline, above or adjacent to results, not hidden in a footer. Consider requiring a checkbox acknowledgment before showing results (matches the compliance note in Appendix B).
+
+---
+
+### 3.4 Component Architecture & Islands Pattern
+
+**Current State:**
+The component hierarchy has five layers:
+1. **Layouts** (Astro, zero JS) — BaseLayout → PageLayout → specialized layouts
+2. **Sections** (Astro, zero JS) — Hero, SplitContent, CTABanner, etc.
+3. **UI Components** (Astro, zero JS) — Button, Card, Badge, Accordion, Tabs
+4. **Animation** (CSS + vanilla JS) — ScrollReveal, CountUp, StaggeredList
+5. **Islands** (React) — IntakeForm, calculators, newsletter, filters
+
+React islands use `client:visible` (lazy) or `client:load` (critical). Framer Motion is bundled with React islands for form step transitions.
+
+**Strengths:**
+- The five-layer hierarchy is clean and well-bounded. Each layer has a clear responsibility, and dependencies flow downward (layouts contain sections, sections contain UI components, islands are standalone).
+- Accordion and Tabs using `<details>`/`<summary>` or CSS-only toggles is excellent. This avoids shipping JS for interactive patterns that CSS/HTML can handle natively.
+- The ScrollReveal component is well-implemented: vanilla JS IntersectionObserver, respects `prefers-reduced-motion`, unobserves after reveal (no memory leaks), and uses CSS transitions (GPU-accelerated).
+
+**Risks:**
+- **P1 — Framer Motion bundle size for one component.** Framer Motion is ~32KB gzipped. On 1322legacystrategies.com, it's used only for the IntakeForm step transitions. On ibcacademy.org, it's potentially unused (the doc mentions it for "React islands" generally but the only specified animations are CSS-based). A CSS-only step transition (`opacity` + `transform` with a state variable) would achieve the same effect at 0KB cost.
+- **P2 — ScrollReveal observer threshold is hardcoded.** The component accepts a `threshold` prop but the IntersectionObserver uses a hardcoded `{ threshold: 0.1 }` instead of the prop value. This is a bug in the reference implementation (line 1497 of the architecture doc).
+- **P2 — View Transitions + React islands interaction.** The architecture enables View Transitions via Astro's API and React islands via `client:visible`/`client:load`. When navigating between pages with View Transitions, React islands must re-hydrate. Astro handles this, but the architecture doesn't discuss the UX of form state loss on back-navigation (e.g., user is on step 3 of the intake form, navigates away, presses back — is step 3 restored from localStorage, or do they start over?).
+- **P2 — No component documentation or Storybook.** With two developers (Chris building, Mabel specifying), a visual component reference would reduce back-and-forth. The architecture specifies component APIs in detail, which helps, but there's no mention of a living style guide.
+
+**Recommendations:**
+- **P1:** Replace Framer Motion with CSS transitions for the IntakeForm step animation. Use React state to toggle a CSS class that applies `opacity` and `translateX` transitions. This eliminates a 32KB dependency for a single animation. If Framer Motion is needed for more complex animations later, it can be added back.
+- **P2:** Fix the ScrollReveal threshold bug — use the `data-threshold` attribute in the IntersectionObserver options.
+- **P2:** Document the expected behavior of React islands during View Transitions navigation. Specifically: does the IntakeForm restore from localStorage on back-navigation? If so, test it.
+- **P2:** Consider a simple component documentation page (e.g., `/dev/components` behind a Vercel password) that renders all components in their variants. Cheaper than Storybook, useful during development.
+
+---
+
+### 3.5 Third-Party Service Integration
+
+**Current State:**
+The architecture depends on these third-party services:
+
+| Service | Status | Purpose |
+|---|---|---|
+| Vercel | Decided | Hosting, CDN, edge functions, preview deploys |
+| Plausible Analytics | Decided | Privacy-focused analytics |
+| Formspree | Option A | Form processing |
+| Astro API routes + Resend | Option B | Form processing (self-hosted) |
+| ConvertKit | Option A | Email list, nurture sequences |
+| Resend | Option B | Transactional email |
+| Notion | Decided | CRM database, triage, calendar |
+| Skool | External | Classroom platform (not integrated, just linked) |
+| Google Fonts | Decided (partially) | Font hosting (contradicted by self-hosting plan) |
+
+**Strengths:**
+- Vercel is the right choice for Astro SSG. Native integration, preview deploys on PRs, global CDN, generous free tier. The team account (chrix-5697) is already provisioned.
+- Plausible over Google Analytics is a strong choice. No cookies means no consent banner, which matters for a financial services site where trust is paramount. The 1KB script vs 45KB for GA4 directly supports the performance targets.
+- Notion as CRM is pragmatic for a solo practitioner. Brad likely already uses Notion for other workflows. The triage rules (GREEN/YELLOW/RED) map naturally to Notion database views.
+
+**Risks:**
+- **P1 — Undecided form processing stack.** Formspree (managed) vs Astro API routes + Resend (self-hosted) are architecturally different. Formspree requires no server-side code but limits customization (triage logic lives outside the codebase). Astro API routes with Resend requires server-side code, Vercel serverless functions, and API key management but enables custom triage logic in code. This decision affects: build configuration (`output: 'static'` works with Formspree but needs `output: 'hybrid'` or `'server'` for API routes), environment variables, error handling, and the developer's implementation approach. Decide before Sprint 1.
+- **P1 — Undecided email service.** ConvertKit (now Kit) is a full marketing automation platform with visual automations, landing pages, and subscriber tagging. Resend is a developer-focused transactional email API. These serve different needs. If Brad wants automated nurture sequences (Section 9.1 mentions "Email Nurture Sequence"), ConvertKit is the right choice. If he only needs form submission confirmations, Resend is simpler. This decision should be made based on the email nurture requirements, not deferred to the developer.
+- **P2 — Font loading contradiction.** Section 6.3 specifies self-hosted fonts (`/fonts/playfair-display-700.woff2`) AND Google Fonts preconnect (`<link rel="preconnect" href="https://fonts.googleapis.com" />`). These are contradictory. Self-hosting eliminates the Google Fonts dependency and is the better choice for performance (no third-party DNS lookup, no render-blocking external request). The preconnect hints should be removed if self-hosting.
+- **P2 — Notion API reliability for critical path.** If the intake form submission writes to Notion via API, Notion API downtime means lost submissions. The architecture mentions "Brad's email + Notion database" as dual destinations, which provides redundancy — but only if the email send and Notion write are independent (not sequential where Notion failure prevents email).
+- **P2 — Skool as funnel dependency.** The entire funnel routes through Skool (ibcacademy.org → Skool → 1322legacystrategies.com). If Skool changes its URL structure, pricing, or availability, the funnel breaks. The architecture doesn't mention a contingency.
+
+**Recommendations:**
+- **P1:** Decide the form processing stack before development begins. Recommendation: **Formspree for v1**. It's simpler, requires no server-side code (preserving `output: 'static'`), includes spam protection, and handles email delivery. Triage logic can remain in Notion views. Migrate to Astro API routes in a future phase if custom server-side logic is needed.
+- **P1:** Decide the email service before development begins. Recommendation: **ConvertKit (Kit)** if Brad plans automated nurture sequences (the architecture strongly implies this). **Resend** only if email is limited to transactional confirmations.
+- **P2:** Remove Google Fonts preconnect hints. Self-host all fonts. This is already the stated plan — the preconnect is a leftover.
+- **P2:** Ensure form submission sends email AND writes to Notion independently. If Notion API fails, the email should still send (and vice versa). Log failures for manual retry.
+- **P2:** Document the Skool dependency. If Skool becomes unavailable, the fallback is to redirect /academy on ibcacademy.org to an internal "curriculum overview" page with a waitlist signup.
+
+---
+
+### 3.6 Performance, Build Pipeline, & Reliability
+
+**Current State:**
+Both sites use Astro SSG (static output), deployed to Vercel's global CDN. Performance targets are aggressive: Lighthouse 100 across all categories, FCP <1.0s, LCP <2.0s, TBT 0ms, CLS 0. CI enforces Lighthouse scores >= 95 on PRs. JavaScript budgets are documented per page type (0KB for static pages up to ~40KB for the intake form).
+
+`prefetchAll: true` is enabled on both sites. Images use Astro's built-in Sharp processing with AVIF/WebP output. Fonts are self-hosted with `font-display: swap` and `size-adjust`.
+
+**Strengths:**
+- Static output is the right architecture for both sites. Neither site has user-specific content in v1 (no login, no personalization). SSG means every page is served from CDN edge with zero server compute.
+- The JavaScript budget table (Section 6.3) is excellent. It sets explicit expectations: 0KB for content pages, ~15KB for newsletter forms, ~30KB for calculators, ~40KB for the intake form. This gives the developer a target and the architect a contract to enforce.
+- Lighthouse CI with 95+ gates catches regressions before they reach production. The 95 threshold (not 100) provides realistic headroom for edge cases.
+
+**Risks:**
+- **P1 — `prefetchAll: true` on the advisory site is aggressive.** 1322legacystrategies.com has ~15 pages. Prefetching all links on page load means every page visit downloads the HTML for every linked page. For a small site on a fast CDN, this is fine on desktop but wastes mobile bandwidth. The education site (ibcacademy.org) has 40+ pages — prefetching all of them on homepage load is excessive and will bloat bandwidth usage.
+- **P1 — TBT 0ms claim is incorrect for pages with React islands.** Total Blocking Time measures main-thread work during page load. React hydration is main-thread work. Even with `client:visible` (deferred hydration), if the island is in the viewport on load, it hydrates immediately and contributes to TBT. The intake form page uses `client:load` (immediate hydration) with React + Zod + Framer Motion (~40KB) — TBT will not be 0ms on this page. The target should be "0ms for static pages, <200ms for island pages."
+- **P2 — No build time budget.** The architecture estimates "~30-60s" for IBC Academy and "~15-30s" for 1322 Legacy. As blog content scales to 200+ posts with image processing, build times will grow. At 250K+ words across 200+ MDX files with Sharp image processing, builds could exceed 5 minutes. There's no plan for incremental builds or build caching.
+- **P2 — Lighthouse CI only tests 4 URLs.** The lighthouserc.json (Section 13.2) tests: `/`, `/learn`, `/blog`, `/tools/interest-bleed`. This misses: the intake form page (heaviest JS), individual blog posts (MDX rendering), learning pages (sidebar navigation), and the 1322 Legacy homepage. CI should test representative pages from each category.
+
+**Recommendations:**
+- **P1:** Change `prefetchAll: true` to `defaultStrategy: 'viewport'` without `prefetchAll`. This prefetches only links visible in the viewport, which is the right tradeoff for both sites. The architecture already sets `defaultStrategy: 'viewport'` but then overrides it with `prefetchAll: true`.
+- **P1:** Correct the TBT target. Static pages: 0ms. Island pages: <200ms. Intake form page: <300ms. Document these per-page targets alongside the JS budget table.
+- **P2:** Add build time monitoring. Vercel tracks build times — set an alert for builds exceeding 3 minutes. Plan for Astro's Content Layer caching (available in Astro 5.x) to mitigate MDX processing time.
+- **P2:** Expand Lighthouse CI URLs to include at least: `/` (homepage), `/learn/foundations/banking-function` (learn page with sidebar), `/blog` (blog index), `/blog/[first-post]` (individual blog post), `/tools/interest-bleed` (calculator island), and for 1322 Legacy: `/`, `/get-started` (intake form).
+
+---
+
+### 3.7 Content Schema, Design Tokens, & Configuration
+
+**Current State:**
+Content is managed through Astro Content Collections with Zod schemas for four collection types: learn (MDX), blog (MDX), case-studies (MDX), and glossary (JSON/YAML). Design tokens are defined as CSS custom properties using Tailwind v4's `@theme` directive. Both sites share core tokens (gold, cream, spacing, shadows, transitions) and extend with site-specific overrides. Configuration is split between `astro.config.mjs`, Tailwind config, and environment variables.
+
+**Strengths:**
+- The content schemas are well-typed. The learn collection includes `path`, `order`, `skoolModule` mapping, `estimatedMinutes`, `prerequisites`, and `keyTakeaways` — these enable rich UI features (progress tracking, estimated time, prerequisite validation, takeaway boxes) with type safety.
+- The blog schema includes separate `seoTitle` and `seoDescription` fields, allowing Brad to optimize SEO meta independently from display content. The `canonical` URL support handles content syndication.
+- The glossary collection using `data` type (JSON/YAML) instead of `content` (MDX) is correct — glossary entries are structured data, not prose.
+
+**Risks:**
+- **P1 — Content schemas are defined but enforcement isn't documented.** Astro Content Collections validate schemas at build time by default. But the architecture doesn't mention what happens on validation failure: does the build fail? Does it skip the invalid entry? For a site publishing 3-4 posts per week (often by Mabel, not the developer), validation errors in frontmatter will be common. The developer workflow for diagnosing and fixing schema errors should be documented.
+- **P2 — No content migration path.** The architecture specifies Content Collections for v1. If the content volume reaches 200+ posts and the team wants a headless CMS (Notion, Sanity, Strato, etc.) in the future, the MDX-based workflow would need migration. This is fine for v1 but worth noting.
+- **P2 — Design token duplication across repos.** The shared `@theme` tokens are defined in CSS (Section 3.3). With two repos, these tokens exist in two places. If the gold color changes from `#C8962E` to something else, both repos must be updated. Unlike component duplication (which is bounded), design token drift affects the entire visual identity.
+- **P2 — Dark mode color system is incomplete.** Section 8.3 defines dark mode colors for IBC Academy but doesn't provide dark mode values for all design tokens. The `--bg-primary`, `--bg-secondary`, `--text-primary`, and `--text-secondary` have dark equivalents, but gold, cream, success, error, warning, and shadow tokens don't have dark mode variants. Gold on dark navy may have insufficient contrast.
+
+**Recommendations:**
+- **P1:** Document the content authoring workflow: how to create a new blog post, what happens if frontmatter is invalid, how to preview locally, and who merges to main. This is a process document, not a technical change, but it's critical for a publishing cadence of 3-4 posts/week.
+- **P2:** Create a shared design token JSON file (e.g., `tokens.json`) that both repos import and compile to CSS. This can be as simple as a shared Gist or a Git submodule containing one file.
+- **P2:** Complete the dark mode token set for IBC Academy. Test gold (`#C8962E`) contrast against dark backgrounds (`#0F1520`, `#1A2235`). Gold on dark navy is approximately 4.8:1 contrast ratio — this passes AA for normal text but fails for small text. Verify with a contrast checker.
+
+---
+
+### 3.8 Quality Gates, Analytics, & Observability
+
+**Current State:**
+Quality gates are defined in Appendix D: Lighthouse >= 95, axe DevTools 0 violations, keyboard navigation, mobile responsive, cross-browser, content review, link check, image optimization, and print stylesheets. CI enforces Lighthouse scores only. Accessibility testing with VoiceOver/NVDA is manual and quarterly. Analytics uses Plausible with 14 custom events on IBC Academy and 8 on 1322 Legacy. No error tracking, uptime monitoring, or form submission monitoring is specified.
+
+**Strengths:**
+- The quality gate checklist (Appendix D) is thorough and covers performance, accessibility, responsiveness, cross-browser, content, links, images, and print. This is a strong definition of "done."
+- The Plausible event tracking plan is well-designed. Key funnel events are tracked: `newsletter_signup`, `skool_click`, `legacy_site_click` (IBC Academy), `intake_form_start/step/submit/abandon` (1322 Legacy). This enables funnel analysis: what % of visitors sign up, what % click through to Skool, what % reach the intake form, what % complete it.
+- Form abandonment tracking (`intake_form_abandon` with `last_step_completed`) is valuable. If users consistently drop off at Step 2 (screening questions), Brad knows the gates are too aggressive.
+
+**Risks:**
+- **P0 — No error tracking in production.** If the intake form fails to submit (Formspree down, network error, JavaScript exception), there is no visibility. Brad won't know submissions are failing until prospects tell him (or don't). For the most critical conversion path on the advisory site, this is unacceptable.
+- **P1 — No uptime monitoring.** Both sites are static on Vercel's CDN, so downtime is unlikely — but DNS misconfiguration, expired SSL certificates, or Vercel outages are possible. Neither site has uptime monitoring or alerts.
+- **P1 — No automated accessibility testing in CI.** The quality gates mention "axe DevTools — 0 violations" but this isn't automated. The Lighthouse CI catches some accessibility issues but not all (Lighthouse accessibility audit is a subset of axe rules). A dedicated axe CI check would catch more violations automatically.
+- **P2 — Manual testing cadence is too sparse.** VoiceOver and NVDA testing quarterly is better than nothing but insufficient for a site publishing 3-4 posts per week. New content could introduce accessibility issues (e.g., images without alt text, headings out of order) that won't be caught for months.
+- **P2 — No form submission monitoring.** Even with error tracking, there should be a monitoring check: "Did we receive at least N intake form submissions this week?" A sudden drop to zero submissions means something is broken. This could be a simple Notion database view with a weekly review.
+
+**Recommendations:**
+- **P0:** Add error tracking for the intake form. At minimum: a `try/catch` around the form submission that sends a Plausible custom event (`intake_form_error` with `error_message` and `step_number`) on failure. For more robust monitoring, add Sentry (free tier covers this scale) specifically for the React islands.
+- **P1:** Add uptime monitoring. Free options: UptimeRobot or Better Uptime. Monitor: `https://ibcacademy.org`, `https://1322legacystrategies.com`, and the Formspree endpoint. Alert Brad and Chris via email.
+- **P1:** Add `@axe-core/cli` or `pa11y` to the CI pipeline alongside Lighthouse. This catches accessibility violations that Lighthouse misses, especially in dynamic content (React islands).
+- **P2:** Add a content authoring lint step: a pre-commit hook or CI check that validates all MDX frontmatter includes `alt` text for images and maintains heading hierarchy. This catches accessibility issues at authoring time, not quarterly.
+- **P2:** Set a weekly reminder to check the Notion intake form database. If zero submissions for 7 days and the site has been live for 30+ days, investigate.
+
+---
+
+## 4. Risk Register
+
+| # | Risk | Severity | Likelihood | Impact | Recommendation |
+|---|---|---|---|---|---|
+| 1 | Intake form has no server-side validation — accepts arbitrary data | P0 | High | High — PII integrity, spam, potential injection | Add server-side validation (Zod), honeypot field, rate limiting |
+| 2 | No error tracking for form submissions — failures are invisible | P0 | Medium | High — lost prospects, silent revenue loss | Add Plausible error event + consider Sentry for React islands |
+| 3 | Undecided form processing stack (Formspree vs API routes) | P1 | Certain | Medium — blocks Sprint 1 planning, affects build config | Decide now. Recommend Formspree for v1 simplicity |
+| 4 | Undecided email service (ConvertKit vs Resend) | P1 | Certain | Medium — blocks nurture sequence implementation | Decide now. Recommend ConvertKit if nurture sequences planned |
+| 5 | localStorage stores PII from intake form in the clear | P1 | High | Medium — PII exposure on shared devices | Use sessionStorage or encrypt localStorage PII fields |
+| 6 | Framer Motion adds ~32KB for one animation on 1322 Legacy | P1 | Certain | Low-Medium — performance budget impact on critical page | Replace with CSS transitions for form step animation |
+| 7 | `prefetchAll: true` wastes bandwidth on mobile | P1 | High | Low — degraded mobile experience, bandwidth cost | Change to viewport-only prefetching |
+| 8 | TBT 0ms target is incorrect for island pages | P1 | Certain | Low — misleading performance expectation | Correct to per-page-type targets |
+| 9 | No uptime monitoring for either site | P1 | Medium | Medium — extended downtime without alerts | Add UptimeRobot or Better Uptime (free tier) |
+| 10 | No automated accessibility testing beyond Lighthouse | P1 | High | Medium — accessibility violations shipped to production | Add axe-core to CI pipeline |
+| 11 | Font loading strategy contradicts itself (self-hosted + Google preconnect) | P2 | Certain | Low — unnecessary third-party request | Remove Google Fonts preconnect |
+| 12 | Lighthouse CI tests only 4 URLs, missing critical pages | P2 | Certain | Low — regressions on untested pages | Expand to 8+ representative URLs |
+| 13 | No content authoring workflow documentation | P2 | High | Low-Medium — authoring errors, publication friction | Document MDX authoring + validation workflow |
+| 14 | Design token duplication across repos — drift risk | P2 | Medium | Low — visual inconsistency between sites | Create shared tokens source file |
+| 15 | Dark mode token set incomplete for IBC Academy | P2 | High | Low — dark mode has contrast issues | Complete dark mode tokens, verify contrast ratios |
+| 16 | Cross-site link fragility — no automated validation | P2 | Medium | Low — broken links between sites | Add cross-site link check to CI |
+| 17 | Skool as single-point funnel dependency — no contingency | P2 | Low | Medium — funnel breaks if Skool changes | Document contingency plan |
+| 18 | No build time monitoring or incremental build strategy | P2 | Medium | Low — build times grow with content scale | Monitor build times, plan for Astro Content Layer caching |
+| 19 | ScrollReveal threshold prop is ignored in implementation | P2 | Certain | Low — bug in reference implementation | Fix IntersectionObserver to use data-threshold attribute |
+| 20 | No data retention policy for form submissions | P1 | Certain | Medium — potential privacy/legal exposure | Document retention policy for Notion CRM data |
+
+---
+
+## 5. Recommended Roadmap
+
+### Before Sprint 1 Begins (Pre-Development Decisions)
+
+These must be resolved before Chris writes a line of code:
+
+1. **Decide form processing stack.** Recommendation: Formspree for v1. This preserves `output: 'static'`, requires no server-side code, and includes built-in spam protection. Document the decision and update Section 6.1.
+
+2. **Decide email service.** Recommendation: ConvertKit (Kit) if automated nurture sequences are planned (the architecture implies this). Resend if email is transactional only. Document the decision and update Section 6.1.
+
+3. **Add honeypot field to intake form specification.** A hidden field that bots fill and humans don't. Zero UX impact. Add to Section 5.3 form spec.
+
+4. **Change intake form localStorage to sessionStorage.** Or encrypt PII fields. Update Section 5.3 form behavior.
+
+### Sprint 1 Additions (During Foundation Build)
+
+These should be added to the Sprint 1 checklist:
+
+5. **Server-side form validation.** If using Formspree: enable their validation rules and reCAPTCHA. If using API routes: implement Zod server-side.
+
+6. **Error tracking for intake form.** At minimum: `try/catch` + Plausible `intake_form_error` event. Consider Sentry free tier for React islands.
+
+7. **Uptime monitoring.** Set up UptimeRobot for both domains and the form endpoint. Free, takes 10 minutes.
+
+8. **Fix `prefetchAll` setting.** Remove `prefetchAll: true` from both `astro.config.mjs` files. Keep `defaultStrategy: 'viewport'`.
+
+9. **Remove Google Fonts preconnect.** Self-host all fonts per the stated plan.
+
+### Sprint 2 Additions (During Content Build)
+
+10. **Document content authoring workflow.** How to create MDX posts, validate frontmatter, preview locally, and merge to main.
+
+11. **Expand Lighthouse CI URLs.** Add intake form page, individual blog post, and learn page to test matrix.
+
+12. **Add axe-core accessibility check to CI.** Catches violations Lighthouse misses.
+
+### Sprint 3 Additions (During Polish)
+
+13. **Evaluate Framer Motion necessity.** Test CSS-only step transitions for the intake form. Remove Framer Motion if CSS achieves the desired effect.
+
+14. **Complete dark mode token set.** Test all color combinations for WCAG AA contrast compliance.
+
+15. **Fix ScrollReveal threshold bug.** Use `data-threshold` in IntersectionObserver options.
+
+### Post-Launch (Ongoing)
+
+16. **Document data retention policy.** Specify Notion CRM retention, access, and deletion procedures.
+
+17. **Cross-site link monitoring.** Weekly CI cron job that validates cross-site links return 200.
+
+18. **Build time monitoring.** Set Vercel build alert at 3 minutes. Plan incremental build strategy when approaching 200+ posts.
+
+### What's Fine As-Is
+
+- Two-repo strategy — correct for the project size and team
+- Astro + Tailwind + React islands stack — strong technology choice
+- Vercel hosting — right platform for SSG
+- Plausible analytics — right choice for privacy and performance
+- Content Collection schemas — well-typed and comprehensive
+- Five-layer component hierarchy — clean separation
+- Funnel architecture — strategically sound with proper compliance enforcement
+- Quality gate checklist — thorough (just needs automation)
+- Blog content strategy — well-planned, realistic targets
+- SEO plan for IBC Academy — well-researched keyword targets
+
+---
+
+*This audit was conducted against the architecture document only. No code was reviewed because no code exists yet — the architecture is pre-development. All findings should be revisited once implementation begins.*

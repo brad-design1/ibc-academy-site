@@ -1,0 +1,325 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Section from '../components/sections/Section.astro';
+import Button from '../components/ui/Button.astro';
+import ScrollReveal from '../components/animation/ScrollReveal.astro';
+import { FORMSPREE_NEWSLETTER_ID } from '../lib/constants';
+---
+
+<PageLayout
+  title="Join the IBC Academy Newsletter | IBC Academy"
+  description="Get weekly insights on the Infinite Banking Concept delivered to your inbox. Plus, download the free IBC Starter Guide when you subscribe."
+>
+  <!-- Hero-style Intro -->
+  <Section background="cream">
+    <ScrollReveal direction="up">
+      <div class="newsletter-intro">
+        <h1 class="newsletter-title">Join the IBC Academy Newsletter</h1>
+        <p class="newsletter-subtitle">
+          Get weekly insights on the Infinite Banking Concept delivered to your inbox. Plus,
+          download the free IBC Starter Guide.
+        </p>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- Signup Form -->
+  <Section>
+    <ScrollReveal direction="up">
+      <div class="form-wrapper">
+        {FORMSPREE_NEWSLETTER_ID ? (
+          <form
+            action={`https://formspree.io/f/${FORMSPREE_NEWSLETTER_ID}`}
+            method="POST"
+            class="signup-form"
+          >
+            <label for="newsletter-email" class="form-label">
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="newsletter-email"
+              name="email"
+              required
+              placeholder="Enter your email address"
+              class="form-input"
+              autocomplete="email"
+            />
+            <!-- Honeypot field for spam protection -->
+            <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+            <Button variant="primary" size="lg" fullWidth class="form-submit">
+              Subscribe & Get the Free Guide
+            </Button>
+            <p class="form-disclaimer">
+              No spam, ever. Unsubscribe at any time. We respect your privacy.
+            </p>
+          </form>
+        ) : (
+          <div class="form-placeholder">
+            <p class="placeholder-text">
+              Newsletter signup is currently being configured. Check back soon to subscribe
+              and receive the free IBC Starter Guide.
+            </p>
+          </div>
+        )}
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- Lead Magnet Description -->
+  <Section title="What's in the Free IBC Starter Guide?" background="cream">
+    <ScrollReveal direction="up">
+      <div class="guide-content">
+        <ul class="guide-list">
+          <li class="guide-item">
+            <span class="guide-icon" aria-hidden="true">&#10003;</span>
+            <span>A clear, jargon-free explanation of the Infinite Banking Concept and how it works</span>
+          </li>
+          <li class="guide-item">
+            <span class="guide-icon" aria-hidden="true">&#10003;</span>
+            <span>Key terms and definitions every IBC student needs to know</span>
+          </li>
+          <li class="guide-item">
+            <span class="guide-icon" aria-hidden="true">&#10003;</span>
+            <span>A curated reading roadmap to deepen your understanding — starting with Nelson Nash's "Becoming Your Own Banker"</span>
+          </li>
+          <li class="guide-item">
+            <span class="guide-icon" aria-hidden="true">&#10003;</span>
+            <span>Common myths and misconceptions about IBC debunked</span>
+          </li>
+          <li class="guide-item">
+            <span class="guide-icon" aria-hidden="true">&#10003;</span>
+            <span>Next steps for applying IBC principles in your own financial life</span>
+          </li>
+        </ul>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- Social Proof -->
+  <Section background="cream">
+    <ScrollReveal direction="up">
+      <div class="social-proof">
+        <p class="proof-headline">Join 500+ students already learning IBC</p>
+        <div class="testimonials">
+          <blockquote class="testimonial">
+            <p class="testimonial-text">
+              "IBC Academy finally made the Infinite Banking Concept click for me. The structured
+              lessons and clear explanations are exactly what I needed."
+            </p>
+            <cite class="testimonial-author">— IBC Academy Student</cite>
+          </blockquote>
+          <blockquote class="testimonial">
+            <p class="testimonial-text">
+              "I'd read Nelson Nash's book twice but still had questions. The Academy's learning
+              paths filled in every gap. Highly recommended for anyone serious about IBC."
+            </p>
+            <cite class="testimonial-author">— IBC Academy Student</cite>
+          </blockquote>
+          <blockquote class="testimonial">
+            <p class="testimonial-text">
+              "The newsletter alone is worth subscribing to. Every week I learn something new
+              about how to think like a banker."
+            </p>
+            <cite class="testimonial-author">— Newsletter Subscriber</cite>
+          </blockquote>
+        </div>
+      </div>
+    </ScrollReveal>
+  </Section>
+</PageLayout>
+
+<style>
+  .newsletter-intro {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .newsletter-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--color-navy, #1B2A4A);
+    margin: 0 0 1.5rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .newsletter-title {
+      font-size: 3.25rem;
+    }
+  }
+
+  .newsletter-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0;
+  }
+
+  /* Form Styles */
+  .form-wrapper {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--color-navy, #1B2A4A);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-navy, #1B2A4A);
+    background-color: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.5rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  .form-input::placeholder {
+    color: #a0aec0;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--color-gold, #C8962E);
+    box-shadow: 0 0 0 3px rgba(200, 150, 46, 0.15);
+  }
+
+  .form-disclaimer {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary, #5A6B8A);
+    text-align: center;
+    margin: 0;
+  }
+
+  .form-placeholder {
+    text-align: center;
+    padding: 2rem;
+    border: 2px dashed #e2e8f0;
+    border-radius: 0.75rem;
+  }
+
+  .placeholder-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0;
+  }
+
+  /* Lead Magnet Guide */
+  .guide-content {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .guide-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .guide-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-navy, #1B2A4A);
+  }
+
+  .guide-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: 0.15rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #ffffff;
+    background-color: var(--color-gold, #C8962E);
+    border-radius: 50%;
+  }
+
+  /* Social Proof */
+  .social-proof {
+    text-align: center;
+  }
+
+  .proof-headline {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.75rem;
+    line-height: 1.3;
+    color: var(--color-navy, #1B2A4A);
+    margin: 0 0 2.5rem 0;
+  }
+
+  .testimonials {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .testimonials {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  .testimonial {
+    margin: 0;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    text-align: left;
+  }
+
+  .testimonial-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 1rem 0;
+    font-style: italic;
+  }
+
+  .testimonial-author {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-navy, #1B2A4A);
+    font-style: normal;
+  }
+</style>

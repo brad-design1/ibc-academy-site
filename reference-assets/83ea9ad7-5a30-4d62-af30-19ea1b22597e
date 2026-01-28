@@ -1,0 +1,306 @@
+# Implementation Plan: Transform Mabel into Proactive Chief of Staff
+
+**Based on:** `gleaming-fluttering-boot.md` (original plan), full codebase audit of `.clawdbot/` and `clawd/`
+
+---
+
+## Senior-Level Assessment
+
+The original plan has the right vision but over-engineers the implementation. Three critical insights reshape the approach:
+
+1. **The clawdbot cron system sends text prompts to Mabel, not scripts.** Every cron job is a `systemEvent` text payload that Mabel interprets using her existing tools (Gmail, Calendar, Notion, WhatsApp, filesystem). The plan's proposed Node.js scripts (`autonomous-heartbeat.js`, `daily-digest.js`, etc.) should be **cron job entries with text payloads**, not code.
+
+2. **79% of client data is empty.** Only 19 of 92 records have contact info. Building pipeline automation, email templates, and knowledge graph entities on top of empty data creates complexity with zero payoff. Fix the data first.
+
+3. **Notion is the task system.** Brad explicitly chose Notion over GoHighLevel on Jan 26. The Mabel Project Board is operational with 53+ items. A local `tasks.json` would create a competing source of truth.
+
+---
+
+## What to Change (and What NOT to Change)
+
+### Files to MODIFY
+
+| File | What to Do |
+|------|-----------|
+| `clawd\IDENTITY.md` | Add proactive Chief of Staff posture (keep it short, ~20 lines total) |
+| `clawd\SOUL.md` | Add "Proactive vs Reactive" and "Approval Gate Philosophy" sections at end |
+| `clawd\USER.md` | Add Kolbe deep-dive and communication preferences sections |
+| `clawd\HEARTBEAT.md` | Expand from 12 lines to ~40 lines with client pipeline checks, email monitoring, and content inventory checks |
+| `clawd\TOOLS.md` | Remove GoHighLevel section (ditched Jan 26), add "No CRM" note |
+| `clawd\AGENTS.md` | Add "Autonomous Operations" section after the Heartbeats section (proactive vs interactive modes, approval gate pattern) |
+| `clawd\memory\heartbeat-state.json` | Extend with: `lastMorningBriefing`, `lastFollowUpDigest`, `lastEmailScan`, `lastEveningRecap`, `lastClientReview`, `lastNotionSync` |
+| `clawd\data\CLIENT_DB_README.md` | Add pipeline stage definitions, sparse overlay documentation |
+| `.clawdbot\cron\jobs.json` | Add 5 new cron jobs (see below) |
+
+### Files to CREATE
+
+| File | Purpose |
+|------|---------|
+| `clawd\data\client-activity.json` | Sparse overlay for pipeline/contact/review data (only clients with actual data, keyed by client ID) |
+| `clawd\PROACTIVE.md` | Autonomous operations manual (what to monitor, when to act, approval gates, digest formats) |
+
+### Files to NOT Create (deferred or unnecessary)
+
+| Proposed File | Why Not |
+|---------------|---------|
+| `data\tasks.json` | Notion Project Board is the task system. No parallel local file. |
+| `data\mabel-state.json` | Extend `heartbeat-state.json` instead. One state file, one source of truth. |
+| `config\pipeline-stages.json` | Over-engineering. Document stages in CLIENT_DB_README.md, check via heartbeat instructions. |
+| `config\cron-jobs.json` | Cron jobs live in `.clawdbot\cron\jobs.json` (platform-managed). No separate config needed. |
+| `config\email-templates\*.md` | Premature. No email send capability with approval workflow exists yet. Build 2-3 templates after the follow-up digest is running. |
+| `scripts\autonomous-heartbeat.js` | The heartbeat IS the autonomous loop. Update HEARTBEAT.md instructions instead. |
+| `scripts\daily-digest.js` through `scripts\evening-recap.js` | These should be cron job text payloads in jobs.json, not JS scripts. |
+| `life\areas\clients\*` (92 entities) | Massive scope creep. Let the existing fact extraction promote clients to entities organically (only when 3+ meaningful interactions exist). |
+
+---
+
+## Phase 1: Identity & Instructions (Modify Existing Files)
+
+### 1.1 Update `clawd\IDENTITY.md`
+**Current:** 12 lines, passive ("I help Brad run his practice")
+**New:** ~20 lines, proactive Chief of Staff posture
+
+Add after existing content:
+- Role: "Chief of Staff & Follow Through Engine"
+- The proactive operating model: "I don't wait to be told. I monitor, identify, draft, propose."
+- Brad is Quick Start, Mabel is Follow Through
+- The approval gate pattern (identify -> draft -> Brad approves -> execute)
+
+### 1.2 Update `clawd\SOUL.md`
+**Current:** 37 lines, philosophy only
+**Add at end (~25 lines):**
+- "Proactive vs Reactive" section (monitor, draft, follow up, remind)
+- "Approval Gate Philosophy" (I'm not Brad's voice, I'm his preparation engine)
+- "When to Push, When to Wait" (urgent client issues = push, routine = batch in digest, never push late night or family time)
+
+### 1.3 Update `clawd\USER.md`
+**Current:** 46 lines, good basics
+**Add after Personality section (~30 lines):**
+- "How Brad's Brain Works (Kolbe Deep Dive)" with High Quick Start / Low Follow Through implications
+- "Communication Preferences" (bullet points > paragraphs, "I drafted this" > "Should I draft this?", direct questions > open-ended)
+- Brief VestGen context (active negotiations for 2027 move, Mabel tracks communication)
+
+### 1.4 Update `clawd\AGENTS.md`
+**Current:** 287 lines, comprehensive but reactive
+**Add after the "Heartbeats" section (~40 lines):**
+- "Autonomous Operations (PROACTIVE MODE)" section
+- Interactive vs Autonomous mode description
+- The approval gate model (what requires approval, what doesn't)
+- Task lifecycle (creation from emails/conversations -> tracking -> escalation levels)
+- Reference to PROACTIVE.md for detailed operational manual
+
+### 1.5 Expand `clawd\HEARTBEAT.md`
+**Current:** 12 lines (fact extraction only)
+**Expand to ~40 lines:**
+- Keep existing fact extraction instructions
+- Add: Client pipeline check (every 4 hours) - scan client-activity.json for overdue actions
+- Add: Content inventory check - are we running low on approved posts?
+- Add: Escalation review - any items past due that need WhatsApp alert to Brad?
+- Add: Reference to heartbeat-state.json for all timestamps
+
+### 1.6 Update `clawd\TOOLS.md`
+- Remove GoHighLevel CRM section (lines 127-138)
+- Replace with: "CRM: Notion + Google Calendar + Mabel automation (decided Jan 26, 2026). No external CRM."
+
+---
+
+## Phase 2: Data Infrastructure
+
+### 2.1 Create `clawd\data\client-activity.json`
+Sparse overlay pattern - only clients with actual activity data:
+
+```json
+{
+  "lastUpdated": "2026-01-27T12:00:00Z",
+  "clients": {
+    "endres-emily": {
+      "pipeline": { "stage": "active-client", "stageEnteredDate": "2025-06-15" },
+      "lastContact": "2025-12-01",
+      "nextAction": "PAW form follow-up (6+ weeks overdue)",
+      "nextActionDate": "2026-01-28",
+      "annualReview": { "anniversaryDate": "2025-06-15", "nextDue": "2026-04-15" }
+    },
+    "schmidt-ben": {
+      "pipeline": { "stage": "illustration", "stageEnteredDate": "2026-01-26" },
+      "lastContact": "2026-01-26",
+      "nextAction": "Guardian Life DR comparison illustrations",
+      "nextActionDate": "2026-01-31"
+    },
+    "palumbo-dean": {
+      "pipeline": { "stage": "underwriting", "stageEnteredDate": "2026-01-20" },
+      "lastContact": "2026-01-26",
+      "nextAction": "Oncologist info for Lafayette underwriting",
+      "nextActionDate": "2026-01-31"
+    }
+  }
+}
+```
+
+Seed with the 3-5 clients mentioned in MEMORY.md and daily notes that have known activity.
+
+### 2.2 Update `clawd\data\CLIENT_DB_README.md`
+Add pipeline stage definitions:
+
+| Stage | Description | Stale After |
+|-------|-------------|-------------|
+| lead | New contact, not qualified | 14 days |
+| byob-sent | BYOB book link sent | 14 days |
+| byob-read | Confirmed they read BYOB | 7 days |
+| intro-call | 30-min intro scheduled/completed | 7 days |
+| design-meeting | Policy design session | 7 days |
+| application | Application submitted | 3 days |
+| underwriting | In review | 60 days |
+| issued | Policy issued, awaiting funding | 30 days |
+| active-client | Funded and active | 90 days (touchpoint) |
+| inactive | Went cold or declined | terminal |
+
+Document the sparse overlay pattern and how client-activity.json relates to clients.json.
+
+### 2.3 Extend `clawd\memory\heartbeat-state.json`
+Add fields to existing file:
+```json
+{
+  "lastChecks": { "email": ..., "calendar": ..., "weather": ... },
+  "lastFactExtraction": ...,
+  "lastWeeklySynthesis": ...,
+  "lastClawdHubScan": ...,
+  "lastMorningBriefing": null,
+  "lastFollowUpDigest": null,
+  "lastEmailScan": null,
+  "lastEveningRecap": null,
+  "lastClientReview": null,
+  "lastNotionSync": null
+}
+```
+
+---
+
+## Phase 3: New Cron Jobs (add to `.clawdbot\cron\jobs.json`)
+
+### 3.1 `morning-briefing` (7:30 AM daily)
+```
+MORNING BRIEFING — Brad's daily kickstart.
+1) CALENDAR: Refresh Google token, read today's events. List meetings with times and client names.
+2) EMAIL: Check unread Gmail from important domains (ffig.com, lafayettelife.com, westernsouthern.com, retirementunderstood.com, client emails). Summarize anything requiring action.
+3) BOARD: Query Mabel Project Board for items due today or overdue.
+4) CLIENTS: Check data/client-activity.json for any nextActionDate that is today or past.
+5) CONTENT: Check Notion Social Content Queue — how many approved posts remain?
+Send a WhatsApp message to Brad. 5-10 bullet points max. Use **bold** for emphasis. No markdown tables. Update heartbeat-state.json.lastMorningBriefing.
+```
+
+### 3.2 `weekly-followup-digest` (Monday 8:00 AM)
+```
+WEEKLY FOLLOW-UP DIGEST — Monday morning client review.
+1) Load data/client-activity.json. Find clients where: nextActionDate is past OR lastContact is >90 days ago (for active-client stage).
+2) Load data/clients.json for full client names and policy details.
+3) For each overdue item, draft a 1-2 sentence recommendation (what to do and why).
+4) Send Brad a WhatsApp message: "Weekly Follow-Up Review" with ranked list of 5-10 highest-priority client actions.
+5) Update heartbeat-state.json.lastFollowUpDigest.
+If no overdue items, send a brief "All clear" message.
+```
+
+### 3.3 `email-scan-clients` (10:00 AM daily, 3:00 PM daily)
+```
+CLIENT EMAIL SCAN — Check for client-related messages.
+1) Refresh Google token. Query Gmail for unread messages from important domains and any messages mentioning known client names from data/clients.json.
+2) For each relevant message: extract key info (who, what, action needed).
+3) Update data/client-activity.json with new lastContact dates and any action items.
+4) If urgent (underwriting issue, client complaint, time-sensitive): send Brad a WhatsApp alert.
+5) Otherwise: log findings to today's memory file silently.
+6) Update heartbeat-state.json.lastEmailScan.
+```
+
+### 3.4 `evening-recap` (6:30 PM daily)
+```
+EVENING RECAP — End of day summary.
+1) Read today's memory file (memory/YYYY-MM-DD.md).
+2) Check what was accomplished today vs. what the morning briefing flagged.
+3) Check data/client-activity.json for any actions that were due today but not resolved.
+4) Send Brad a brief WhatsApp message: what got done, what carries to tomorrow, anything needing attention.
+5) Update heartbeat-state.json.lastEveningRecap.
+Keep it concise — 3-5 bullet points. Skip if nothing notable happened (HEARTBEAT_OK).
+```
+
+### 3.5 `content-inventory-check` (Wednesday 9:00 AM)
+```
+CONTENT INVENTORY CHECK — Ensure social pipeline doesn't run dry.
+1) Query Notion Social Content Queue for posts with Status='Approved' that haven't been published yet.
+2) Calculate: at current posting rate, how many days of content remain?
+3) If <7 days of content remaining: alert Brad via WhatsApp that new content batch is needed.
+4) If <3 days: escalate with "URGENT" flag.
+Log result to today's memory file.
+```
+
+---
+
+## Phase 4: Create `clawd\PROACTIVE.md`
+
+New file — Mabel's autonomous operations manual (~80 lines):
+
+**Sections:**
+1. **Operating Modes** — Interactive (WhatsApp conversation) vs Autonomous (heartbeat + cron driven)
+2. **What to Monitor** — Emails, calendar, tasks, client pipeline, content inventory
+3. **Approval Required vs Not Required** — Sending external comms = yes. Reading/monitoring/drafting = no.
+4. **Daily Rhythm** — 6:00 inbox cleanup -> 7:00 scheduler -> 7:30 morning briefing -> 7:50 social preflight -> ... -> 6:30 evening recap -> 11:00 board sync
+5. **Digest Formats** — Morning briefing template, weekly follow-up template, evening recap template
+6. **Escalation Protocol** — Level 0 (approaching due): log. Level 1 (past due): Notion task + daily notes. Level 2 (7 days overdue): WhatsApp Brad.
+7. **Brad Response Protocol** — If Brad doesn't respond to follow-up digest by Wednesday, resurface top 3 items. Never silently drop.
+
+---
+
+## What This Plan Does NOT Include (Deferred)
+
+| Item | Why Deferred | When to Revisit |
+|------|-------------|----------------|
+| Email templates (11 proposed) | No email send + approval workflow exists yet | After approval workflow is built |
+| Pipeline automation (auto-advance stages) | No data to automate against; stages not validated | After Brad manually works pipeline for 4+ weeks |
+| Commission tracking | No commission data exists | When Brad provides data or VestGen terms arrive |
+| 92 client KG entities | Most clients have zero facts; weekly synthesis would process 184 empty files | Organic growth via fact extraction (3+ interactions → promote) |
+| Content distribution via Meta/LinkedIn APIs | Phase 3 of original plan; social browser automation already works | When browser automation becomes unreliable |
+| Financial intelligence / VestGen model | Phase 4 of original plan; pending contract terms | When Matt LaLonde provides data |
+| `tasks.json` local file | Notion Project Board is the task system | Only if Notion API latency becomes a real problem |
+| `pipeline-stages.json` config | Over-engineering; document in README, check via heartbeat | Only if heartbeat instructions become too complex |
+
+---
+
+## Implementation Order
+
+1. **Modify identity files** (IDENTITY.md, SOUL.md, USER.md, AGENTS.md) — establishes proactive posture
+2. **Expand HEARTBEAT.md** — gives Mabel new instructions for autonomous checks
+3. **Fix TOOLS.md** — remove stale GoHighLevel reference
+4. **Create client-activity.json** — seed with 3-5 known active clients
+5. **Update CLIENT_DB_README.md** — document pipeline stages and overlay pattern
+6. **Extend heartbeat-state.json** — add new tracking fields
+7. **Create PROACTIVE.md** — autonomous operations manual
+8. **Add 5 cron jobs** — morning briefing, weekly follow-up, email scan, evening recap, content check
+
+---
+
+## Verification
+
+After implementation:
+1. **Morning briefing test:** Wait for 7:30 AM or manually trigger. Verify Brad receives WhatsApp with today's calendar, email highlights, and overdue items.
+2. **Heartbeat behavior:** On next heartbeat, Mabel should read expanded HEARTBEAT.md and check client-activity.json for overdue actions.
+3. **Client data:** Verify client-activity.json has 3-5 seeded records with real dates from MEMORY.md and daily notes.
+4. **Identity coherence:** Start a new session. Verify Mabel's bootstrap reads the updated identity files and reflects proactive posture.
+5. **Evening recap test:** Wait for 6:30 PM or manually trigger. Verify Brad receives WhatsApp summary of the day.
+6. **Content inventory:** Verify Wednesday check correctly counts remaining approved posts in Notion.
+
+---
+
+## Files Modified/Created Summary
+
+**Modified (9 files):**
+- `C:\Users\bradl\clawd\IDENTITY.md`
+- `C:\Users\bradl\clawd\SOUL.md`
+- `C:\Users\bradl\clawd\USER.md`
+- `C:\Users\bradl\clawd\AGENTS.md`
+- `C:\Users\bradl\clawd\HEARTBEAT.md`
+- `C:\Users\bradl\clawd\TOOLS.md`
+- `C:\Users\bradl\clawd\memory\heartbeat-state.json`
+- `C:\Users\bradl\clawd\data\CLIENT_DB_README.md`
+- `C:\Users\bradl\.clawdbot\cron\jobs.json`
+
+**Created (2 files):**
+- `C:\Users\bradl\clawd\data\client-activity.json`
+- `C:\Users\bradl\clawd\PROACTIVE.md`

@@ -1,0 +1,119 @@
+---
+interface Props {
+  target: number;
+  suffix?: string;
+  prefix?: string;
+  duration?: number;
+  class?: string;
+}
+
+const {
+  target,
+  suffix = '',
+  prefix = '',
+  duration = 2000,
+  class: className = '',
+} = Astro.props;
+---
+
+<div class:list={['count-up-wrapper', className]}>
+  <span
+    class="count-up-number text-4xl font-bold text-[var(--color-navy)]"
+    data-target={target}
+    data-suffix={suffix}
+    data-prefix={prefix}
+    data-duration={duration}
+  >
+    {prefix}0{suffix}
+  </span>
+  <slot />
+</div>
+
+<style>
+  .count-up-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .count-up-number {
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+  }
+</style>
+
+<script>
+  function easeOutQuart(t: number): number {
+    return 1 - Math.pow(1 - t, 4);
+  }
+
+  function animateCount(el: HTMLElement): void {
+    const target = parseFloat(el.dataset.target || '0');
+    const suffix = el.dataset.suffix || '';
+    const prefix = el.dataset.prefix || '';
+    const duration = parseInt(el.dataset.duration || '2000');
+
+    const isInteger = Number.isInteger(target);
+    let startTime: number | null = null;
+
+    function update(currentTime: number): void {
+      if (startTime === null) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutQuart(progress);
+      const currentValue = easedProgress * target;
+
+      if (isInteger) {
+        el.textContent = `${prefix}${Math.round(currentValue).toLocaleString()}${suffix}`;
+      } else {
+        el.textContent = `${prefix}${currentValue.toFixed(1)}${suffix}`;
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        if (isInteger) {
+          el.textContent = `${prefix}${target.toLocaleString()}${suffix}`;
+        } else {
+          el.textContent = `${prefix}${target.toLocaleString()}${suffix}`;
+        }
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll('.count-up-number').forEach((el) => {
+    const element = el as HTMLElement;
+    const target = element.dataset.target || '0';
+    const suffix = element.dataset.suffix || '';
+    const prefix = element.dataset.prefix || '';
+
+    if (prefersReducedMotion) {
+      const targetNum = parseFloat(target);
+      if (Number.isInteger(targetNum)) {
+        element.textContent = `${prefix}${targetNum.toLocaleString()}${suffix}`;
+      } else {
+        element.textContent = `${prefix}${targetNum.toLocaleString()}${suffix}`;
+      }
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animateCount(entry.target as HTMLElement);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(element);
+  });
+</script>
