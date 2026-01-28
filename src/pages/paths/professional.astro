@@ -1,0 +1,444 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import Section from '../../components/sections/Section.astro';
+import CTABanner from '../../components/sections/CTABanner.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+import ScrollReveal from '../../components/animation/ScrollReveal.astro';
+---
+
+<PageLayout
+  title="For Professionals | IBC Academy"
+  description="You earn well, save diligently, and follow the rules. But your wealth is locked up, controlled by others, and you can't touch it without permission. There's a reason for that."
+>
+  <!-- Hero Section -->
+  <Section background="cream">
+    <ScrollReveal direction="up">
+      <div class="hero-content">
+        <span class="hero-eyebrow">For High-Income Professionals</span>
+        <h1 class="hero-title">You've Done Everything Right. <br />So Why Does Something Feel Off?</h1>
+        <p class="hero-text">
+          You max out your 401(k). You carry term insurance. You diversify across index funds. You've followed every piece of mainstream financial advice for the last fifteen or twenty years.
+        </p>
+        <p class="hero-text">
+          And yet — your wealth isn't really yours. It's locked behind age restrictions, vesting schedules, and rules you didn't write. You need permission to access the money you earned.
+        </p>
+        <p class="hero-text">
+          This six-article series is for professionals who've started asking a quiet question: <strong>What if the conventional path is the trap?</strong>
+        </p>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- The Professional's Dilemma -->
+  <Section title="The Professional's Dilemma">
+    <ScrollReveal direction="up">
+      <div class="clarity-content">
+        <div class="clarity-grid">
+          <div class="clarity-box">
+            <h3 class="clarity-heading is-not">What You've Been Told:</h3>
+            <ul class="clarity-list">
+              <li>Max out your 401(k) — always get the match</li>
+              <li>Buy term insurance and invest the difference</li>
+              <li>Diversify across low-cost index funds</li>
+              <li>Stay the course — time in the market beats timing</li>
+              <li>You'll access it all at 59½. Just be patient.</li>
+            </ul>
+          </div>
+          <div class="clarity-box">
+            <h3 class="clarity-heading is-yes">What Nobody Mentions:</h3>
+            <ul class="clarity-list">
+              <li>Your 401(k) is a tax-deferred promise, not wealth you control</li>
+              <li>Unvested stock and deferred comp keep you tethered to your employer</li>
+              <li>A market drop the year before retirement changes everything</li>
+              <li>You'll pay taxes on every dollar you withdraw — at a rate you can't predict</li>
+              <li>You've traded access and control for a tax break</li>
+            </ul>
+          </div>
+        </div>
+        <p class="clarity-footer">
+          You don't need more income. You need capital you actually control — capital that works on your timeline, not someone else's.
+        </p>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- The 6 Articles -->
+  <Section title="Your 6-Article Journey" subtitle="Each article is written for professionals who think critically and don't have time for fluff. Expect clarity, not hype." background="cream">
+    <div class="journey-grid">
+      <ScrollReveal direction="up" delay={0}>
+        <a href="/learn/articles/professional-01-ibc-introduction" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">01</span>
+            <h3 class="journey-title">The Infinite Banking Concept: A Professional's Introduction</h3>
+            <p class="journey-desc">You've heard it dismissed as a whole life insurance pitch. Here's what it actually is — and why professionals like you are paying attention.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={100}>
+        <a href="/learn/articles/professional-02-banking-function" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">02</span>
+            <h3 class="journey-title">The Banking Function: What Nelson Nash Really Meant</h3>
+            <p class="journey-desc">Every dollar you earn passes through someone else's banking system. Nash spent decades figuring out how to change that. Here's what he found.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={200}>
+        <a href="/learn/articles/professional-03-401k-trap" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">03</span>
+            <h3 class="journey-title">The 401(k) Trap: What Your HR Department Won't Tell You</h3>
+            <p class="journey-desc">You're maxing it out. Getting the match. Doing everything right. But you've traded control for a tax break — and the math might not be in your favor.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={300}>
+        <a href="/learn/articles/professional-04-sequence-risk" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">04</span>
+            <h3 class="journey-title">Sequence of Returns Risk: The Retirement Danger Nobody Mentions</h3>
+            <p class="journey-desc">You've saved diligently for 30 years. Then the market drops 40% the year before you retire. Everything changes. This is the risk your advisor glosses over.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={400}>
+        <a href="/learn/articles/professional-05-btid-myth" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">05</span>
+            <h3 class="journey-title">Buy Term and Invest the Difference: The Professional's Myth</h3>
+            <p class="journey-desc">It sounds logical. Your advisor recommends it. Dave Ramsey swears by it. But when you actually run the numbers for high-income professionals, the story changes.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={500}>
+        <a href="/learn/articles/professional-06-golden-handcuffs" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">06</span>
+            <h3 class="journey-title">The Golden Handcuffs: A Case Study in Capital and Control</h3>
+            <p class="journey-desc">She makes $265K. Has $340K in unvested compensation. Can't leave a job that's destroying her health. This is what happens when someone else controls your capital.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+    </div>
+  </Section>
+
+  <!-- Why This Matters -->
+  <Section title="The Question Worth Asking">
+    <ScrollReveal direction="up">
+      <div class="why-content">
+        <p class="why-text">
+          You've spent your career building someone else's balance sheet. Your employer's. Your bank's. Your 401(k) custodian's. The IRS gets their cut eventually. Everyone's taken care of.
+        </p>
+        <blockquote class="why-quote">
+          "The function of banking is a process — not a place. And you can own that process."
+        </blockquote>
+        <p class="why-attribution">— Nelson Nash, creator of the Infinite Banking Concept</p>
+        <p class="why-text">
+          The golden handcuffs aren't made of stock options. They're made of the belief that you can't walk away without them.
+        </p>
+        <p class="why-text">
+          What changes when a professional owns liquid, accessible capital — capital that doesn't require permission from an employer, a custodian, or the tax code to use?
+        </p>
+        <p class="why-text">
+          That's what this series is about.
+        </p>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- CTA Section -->
+  <Section background="cream">
+    <ScrollReveal direction="up">
+      <div class="cta-content">
+        <h2 class="cta-title">Start With Article 1</h2>
+        <p class="cta-text">
+          A clear, no-nonsense introduction to the Infinite Banking Concept — written for professionals who've heard it dismissed and want to decide for themselves.
+        </p>
+        <div class="cta-button">
+          <Button variant="primary" size="lg" href="/learn/articles/professional-01-ibc-introduction">
+            Read the Introduction →
+          </Button>
+        </div>
+        <p class="cta-note">
+          No signup. No email capture. No sales pitch at the end. Just six articles and the information to make your own decision.
+        </p>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- Final Note -->
+  <CTABanner
+    heading="Have Questions?"
+    description="Join our free community where 500+ professionals and business owners are learning together. Ask anything. No pressure."
+    buttonText="Join the Conversation"
+    buttonHref="https://skool.com/ibc-academy"
+  />
+</PageLayout>
+
+<style>
+  /* Hero Section */
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-gold, #C9A962);
+    margin-bottom: 1rem;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2.25rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--color-navy, #1B2A4A);
+    margin: 0 0 1.5rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .hero-title {
+      font-size: 3rem;
+    }
+  }
+
+  .hero-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 1rem 0;
+  }
+
+  .hero-text:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Clarity Section */
+  .clarity-content {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .clarity-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .clarity-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .clarity-box {
+    background: var(--color-cream, #FAF9F6);
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .clarity-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+  }
+
+  .clarity-heading.is-not {
+    color: var(--color-text-secondary, #5A6B8A);
+  }
+
+  .clarity-heading.is-yes {
+    color: var(--color-navy, #1B2A4A);
+  }
+
+  .clarity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .clarity-list li {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary, #5A6B8A);
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .clarity-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--color-gold, #C9A962);
+  }
+
+  .clarity-footer {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* Journey Section */
+  .journey-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .journey-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .journey-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .journey-card-link {
+    text-decoration: none;
+    display: block;
+  }
+
+  .journey-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(27, 42, 74, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .journey-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(27, 42, 74, 0.12);
+  }
+
+  .journey-number {
+    display: inline-block;
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-gold, #C9A962);
+    margin-bottom: 0.75rem;
+  }
+
+  .journey-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-navy, #1B2A4A);
+    margin: 0 0 0.75rem 0;
+  }
+
+  .journey-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0;
+  }
+
+  /* Why Section */
+  .why-content {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .why-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 1.25rem 0;
+  }
+
+  .why-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--color-navy, #1B2A4A);
+    margin: 2rem 0 0.75rem 0;
+    padding: 0 1rem;
+    border-left: 4px solid var(--color-gold, #C9A962);
+    text-align: left;
+  }
+
+  @media (min-width: 768px) {
+    .why-quote {
+      font-size: 1.75rem;
+      padding: 0 2rem;
+    }
+  }
+
+  .why-attribution {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 2rem 0;
+    text-align: left;
+    padding-left: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .why-attribution {
+      padding-left: 2rem;
+    }
+  }
+
+  /* CTA Section */
+  .cta-content {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2rem;
+    color: var(--color-navy, #1B2A4A);
+    margin: 0 0 1rem 0;
+  }
+
+  .cta-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 2rem 0;
+  }
+
+  .cta-button {
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-note {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #5A6B8A);
+    font-style: italic;
+    margin: 0;
+  }
+</style>
