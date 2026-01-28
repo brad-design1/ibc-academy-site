@@ -1,0 +1,444 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import Section from '../../components/sections/Section.astro';
+import CTABanner from '../../components/sections/CTABanner.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+import ScrollReveal from '../../components/animation/ScrollReveal.astro';
+---
+
+<PageLayout
+  title="Deeper Understanding | IBC Academy"
+  description="You know what IBC is. Now understand why it works. Austrian economics, policy mechanics, and the toughest questions — answered honestly."
+>
+  <!-- Hero Section -->
+  <Section background="cream">
+    <ScrollReveal direction="up">
+      <div class="hero-content">
+        <span class="hero-eyebrow">For Those Who Want to Go Deeper</span>
+        <h1 class="hero-title">You Know What IBC Is. <br />Now Understand Why It Works.</h1>
+        <p class="hero-text">
+          You've read the overview. You understand the basic premise — use a whole life policy as a personal banking system. Maybe you've even read <em>Becoming Your Own Banker</em> once.
+        </p>
+        <p class="hero-text">
+          But something isn't clicking yet. You can explain the concept to someone else, but you can't quite explain <em>why</em> it's inevitable. You want the foundations, not the summary.
+        </p>
+        <p class="hero-text">
+          This path is built for you. Six articles that go from economic theory to policy mechanics to the hardest questions critics raise — and answer all of them honestly. No hand-waving. No "just trust the process."
+        </p>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- What This Is (And Isn't) -->
+  <Section title="What This Journey Is (And Isn't)">
+    <ScrollReveal direction="up">
+      <div class="clarity-content">
+        <div class="clarity-grid">
+          <div class="clarity-box">
+            <h3 class="clarity-heading is-not">This is NOT:</h3>
+            <ul class="clarity-list">
+              <li>A rehash of the basics you already know</li>
+              <li>Hype dressed up in bigger words</li>
+              <li>A pitch disguised as education</li>
+              <li>Hand-waving past the hard questions</li>
+              <li>Content that avoids the tradeoffs</li>
+            </ul>
+          </div>
+          <div class="clarity-box">
+            <h3 class="clarity-heading is-yes">This IS:</h3>
+            <ul class="clarity-list">
+              <li>The Austrian economics behind the concept</li>
+              <li>Policy mechanics explained without shortcuts</li>
+              <li>Every tough objection addressed head-on</li>
+              <li>The path from understanding to conviction</li>
+              <li>Depth that respects your intelligence</li>
+            </ul>
+          </div>
+        </div>
+        <p class="clarity-footer">
+          By the end, you'll either have the "lightbulb moment" that makes IBC feel inevitable — or you'll have the clearest possible reasons for your skepticism. Either way, you'll understand this at a level most practitioners don't.
+        </p>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- The 6 Articles -->
+  <Section title="Your 6-Article Journey" subtitle="Each article takes 8–12 minutes. Expect economics, mechanics, and honesty — not talking points." background="cream">
+    <div class="journey-grid">
+      <ScrollReveal direction="up" delay={0}>
+        <a href="/learn/articles/deeper-01-economics-behind" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">01</span>
+            <h3 class="journey-title">Why IBC Works: The Economics Behind the Concept</h3>
+            <p class="journey-desc">Nelson Nash didn't invent IBC in a vacuum. He stood on the shoulders of Menger, Mises, and the Austrian school. Here's the economic foundation that makes IBC inevitable.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={100}>
+        <a href="/learn/articles/deeper-02-five-human-problems" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">02</span>
+            <h3 class="journey-title">The Five Human Problems IBC Solves</h3>
+            <p class="journey-desc">Nash identified five problems every human faces with money. Understanding these problems is the key to understanding why the solution works.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={200}>
+        <a href="/learn/articles/deeper-03-how-policy-works" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">03</span>
+            <h3 class="journey-title">How a Whole Life Policy Actually Works</h3>
+            <p class="journey-desc">Base premium. Paid-up additions. Cash value. Dividends. Non-direct recognition. Here's what's actually happening inside your policy — no hand-waving.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={300}>
+        <a href="/learn/articles/deeper-04-policy-loans" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">04</span>
+            <h3 class="journey-title">Policy Loans: The Mechanism That Changes Everything</h3>
+            <p class="journey-desc">This is where most people's understanding breaks down. Policy loans aren't what you think — and that's exactly why they work.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={400}>
+        <a href="/learn/articles/deeper-05-toughest-questions" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">05</span>
+            <h3 class="journey-title">The Toughest Questions About IBC (Answered Honestly)</h3>
+            <p class="journey-desc">MEC limits. Opportunity cost. "It takes too long." "I can do better in the market." Every hard question, addressed head-on.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={500}>
+        <a href="/learn/articles/deeper-06-lightbulb-moment" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">06</span>
+            <h3 class="journey-title">The Lightbulb Moment</h3>
+            <p class="journey-desc">Some people get it on the first read. Others take months. Both are fine. Here's what the moment of clarity actually feels like — and how to find yours.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+    </div>
+  </Section>
+
+  <!-- Why This Matters -->
+  <Section title="Why Go Deeper?">
+    <ScrollReveal direction="up">
+      <div class="why-content">
+        <p class="why-text">
+          Most people learn IBC like a product. They memorize the steps — fund a policy, take a loan, pay it back. That's fine for getting started.
+        </p>
+        <blockquote class="why-quote">
+          "The problem with trying to teach a process without teaching the underlying economics is that the student never develops conviction. And without conviction, they quit."
+        </blockquote>
+        <p class="why-attribution">— Nelson Nash, paraphrased from Becoming Your Own Banker</p>
+        <p class="why-text">
+          Nash spent years studying Austrian economics before he ever connected it to whole life insurance. He didn't start with the product. He started with the problem.
+        </p>
+        <p class="why-text">
+          That's what this path gives you. Not a better sales pitch — a real foundation. The kind that turns "I think this makes sense" into "I see why this is mathematically and economically inevitable."
+        </p>
+        <p class="why-text">
+          The lightbulb moment is real. And it's worth pursuing.
+        </p>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- CTA Section -->
+  <Section background="cream">
+    <ScrollReveal direction="up">
+      <div class="cta-content">
+        <h2 class="cta-title">Start With the Economics</h2>
+        <p class="cta-text">
+          Article 1 begins where Nash began — with Menger, Mises, and the Austrian understanding of money. Everything else builds from there.
+        </p>
+        <div class="cta-button">
+          <Button variant="primary" size="lg" href="/learn/articles/deeper-01-economics-behind">
+            Begin Article 1 →
+          </Button>
+        </div>
+        <p class="cta-note">
+          Already past the economics? Jump to any article above. They're designed to be read in order, but each stands on its own.
+        </p>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- Final Note -->
+  <CTABanner
+    heading="Want to Discuss What You're Learning?"
+    description="Join 500+ people studying IBC seriously. Ask the hard questions. Get real answers from practitioners, not salespeople."
+    buttonText="Join the Community"
+    buttonHref="https://skool.com/ibc-academy"
+  />
+</PageLayout>
+
+<style>
+  /* Hero Section */
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-gold, #C9A962);
+    margin-bottom: 1rem;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2.25rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--color-navy, #1B2A4A);
+    margin: 0 0 1.5rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .hero-title {
+      font-size: 3rem;
+    }
+  }
+
+  .hero-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 1rem 0;
+  }
+
+  .hero-text:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Clarity Section */
+  .clarity-content {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .clarity-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .clarity-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .clarity-box {
+    background: var(--color-cream, #FAF9F6);
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .clarity-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+  }
+
+  .clarity-heading.is-not {
+    color: var(--color-text-secondary, #5A6B8A);
+  }
+
+  .clarity-heading.is-yes {
+    color: var(--color-navy, #1B2A4A);
+  }
+
+  .clarity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .clarity-list li {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary, #5A6B8A);
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .clarity-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--color-gold, #C9A962);
+  }
+
+  .clarity-footer {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* Journey Section */
+  .journey-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .journey-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .journey-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .journey-card-link {
+    text-decoration: none;
+    display: block;
+  }
+
+  .journey-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(27, 42, 74, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .journey-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(27, 42, 74, 0.12);
+  }
+
+  .journey-number {
+    display: inline-block;
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-gold, #C9A962);
+    margin-bottom: 0.75rem;
+  }
+
+  .journey-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-navy, #1B2A4A);
+    margin: 0 0 0.75rem 0;
+  }
+
+  .journey-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0;
+  }
+
+  /* Why Section */
+  .why-content {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .why-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 1.25rem 0;
+  }
+
+  .why-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--color-navy, #1B2A4A);
+    margin: 2rem 0 0.75rem 0;
+    padding: 0 1rem;
+    border-left: 4px solid var(--color-gold, #C9A962);
+    text-align: left;
+  }
+
+  @media (min-width: 768px) {
+    .why-quote {
+      font-size: 1.75rem;
+      padding: 0 2rem;
+    }
+  }
+
+  .why-attribution {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 2rem 0;
+    text-align: left;
+    padding-left: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .why-attribution {
+      padding-left: 2rem;
+    }
+  }
+
+  /* CTA Section */
+  .cta-content {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2rem;
+    color: var(--color-navy, #1B2A4A);
+    margin: 0 0 1rem 0;
+  }
+
+  .cta-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 2rem 0;
+  }
+
+  .cta-button {
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-note {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #5A6B8A);
+    font-style: italic;
+    margin: 0;
+  }
+</style>
