@@ -23,7 +23,7 @@ const Tag = href ? 'a' : 'div';
 <Tag
   href={href}
   class:list={[
-    'block rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden bg-white dark:bg-[var(--bg-secondary)] hover:translate-y-[-2px]',
+    'block rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden bg-white dark:bg-[var(--bg-secondary)] hover:translate-y-[-2px] no-underline',
     href && 'cursor-pointer',
     className,
   ]}
@@ -31,7 +31,7 @@ const Tag = href ? 'a' : 'div';
   <slot name="image" />
   <div class="p-6">
     {badge && <Badge variant="gold" class="mb-3">{badge}</Badge>}
-    <h3 class="text-xl font-semibold text-[var(--color-navy)] dark:text-white mb-2 font-heading">
+    <h3 class="text-xl font-semibold text-[var(--color-navy)] dark:text-white mb-2" style="font-family: var(--font-heading);">
       {title}
     </h3>
     <p class="text-[var(--color-text-secondary)] dark:text-[var(--color-text-muted)] leading-relaxed">

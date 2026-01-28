@@ -5,6 +5,7 @@ interface Props {
   href?: string;
   icon?: string;
   fullWidth?: boolean;
+  type?: 'button' | 'submit' | 'reset';
   class?: string;
 }
 
@@ -14,12 +15,13 @@ const {
   href,
   icon,
   fullWidth = false,
+  type = 'button',
   class: className = '',
 } = Astro.props;
 
 const Tag = href ? 'a' : 'button';
 
-const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]';
+const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-300 no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]';
 
 const variants = {
   primary: 'bg-[var(--color-gold)] text-white hover:bg-[var(--color-gold-dark)] active:scale-[0.98] shadow-md hover:shadow-lg',
@@ -37,6 +39,7 @@ const sizes = {
 
 <Tag
   href={href}
+  type={!href ? type : undefined}
   class:list={[baseStyles, variants[variant], sizes[size], fullWidth && 'w-full', className]}
 >
   <slot />

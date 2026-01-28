@@ -53,28 +53,36 @@ const {
 </style>
 
 <script>
-  document.querySelectorAll('.scroll-reveal').forEach((el) => {
-    const threshold = parseFloat((el as HTMLElement).dataset.threshold || '0.1');
+  function initScrollReveal() {
+    document.querySelectorAll('.scroll-reveal:not(.revealed)').forEach((el) => {
+      const threshold = parseFloat((el as HTMLElement).dataset.threshold || '0.1');
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const target = entry.target as HTMLElement;
-            const delay = parseInt(target.dataset.delay || '0');
-            const duration = parseInt(target.dataset.duration || '600');
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const target = entry.target as HTMLElement;
+              const delay = parseInt(target.dataset.delay || '0');
+              const duration = parseInt(target.dataset.duration || '600');
 
-            target.style.transitionDuration = `${duration}ms`;
-            target.style.transitionDelay = `${delay}ms`;
+              target.style.transitionDuration = `${duration}ms`;
+              target.style.transitionDelay = `${delay}ms`;
 
-            setTimeout(() => target.classList.add('revealed'), 10);
-            observer.unobserve(target);
-          }
-        });
-      },
-      { threshold }
-    );
+              setTimeout(() => target.classList.add('revealed'), 10);
+              observer.unobserve(target);
+            }
+          });
+        },
+        { threshold }
+      );
 
-    observer.observe(el);
-  });
+      observer.observe(el);
+    });
+  }
+
+  // Run on initial load
+  initScrollReveal();
+
+  // Re-run after Astro View Transitions navigation
+  document.addEventListener('astro:after-swap', initScrollReveal);
 </script>

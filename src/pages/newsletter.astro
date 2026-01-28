@@ -46,8 +46,8 @@ import { FORMSPREE_NEWSLETTER_ID } from '../lib/constants';
               autocomplete="email"
             />
             <!-- Honeypot field for spam protection -->
-            <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
-            <Button variant="primary" size="lg" fullWidth class="form-submit">
+            <input type="text" name="_gotcha" style="position:absolute;left:-9999px" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <Button variant="primary" size="lg" fullWidth type="submit" class="form-submit">
               Subscribe & Get the Free Guide
             </Button>
             <p class="form-disclaimer">
