@@ -27,7 +27,7 @@ const blog = defineCollection({
     author: z.string().default('Brad Raschke'),
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
-    category: z.enum(['foundations', 'mechanics', 'case-studies', 'austrian-economics', 'mindset', 'news', 'just-curious']),
+    category: z.enum(['foundations', 'mechanics', 'case-studies', 'austrian-economics', 'mindset', 'news', 'just-curious', 'prove-it', 'business-owner', 'deeper-understanding', 'professional', 'parent', 'freedom-seeker', 'real-estate']),
     series: z.string().optional(),
     seriesOrder: z.number().optional(),
     tags: z.array(z.string()),
