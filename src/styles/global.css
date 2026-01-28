@@ -305,6 +305,15 @@ img {
 }
 
 /* -------------------------------------------------------------------------
+   Portrait Image Fixes — Carl Menger photo crop correction
+   His portrait needs center-face positioning instead of top-aligned
+   to avoid cutting off his head/forehead in 3:4 containers
+   ------------------------------------------------------------------------- */
+img[alt="Carl Menger"] {
+  object-position: center 20% !important;
+}
+
+/* -------------------------------------------------------------------------
    Remove Default Margins
    ------------------------------------------------------------------------- */
 body,
