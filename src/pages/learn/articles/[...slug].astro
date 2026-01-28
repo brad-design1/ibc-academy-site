@@ -1,0 +1,266 @@
+---
+import { getCollection, render } from 'astro:content';
+import PageLayout from '../../../layouts/PageLayout.astro';
+import Section from '../../../components/sections/Section.astro';
+import Button from '../../../components/ui/Button.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('blog');
+  return articles.map((article) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+
+// Get series navigation if this article is part of a series
+let prevArticle = null;
+let nextArticle = null;
+if (article.data.series) {
+  const allArticles = await getCollection('blog');
+  const seriesArticles = allArticles
+    .filter((a) => a.data.series === article.data.series)
+    .sort((a, b) => (a.data.seriesOrder || 0) - (b.data.seriesOrder || 0));
+  
+  const currentIndex = seriesArticles.findIndex((a) => a.id === article.id);
+  if (currentIndex > 0) prevArticle = seriesArticles[currentIndex - 1];
+  if (currentIndex < seriesArticles.length - 1) nextArticle = seriesArticles[currentIndex + 1];
+}
+
+const formattedDate = new Date(article.data.publishedAt).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<PageLayout
+  title={`${article.data.seoTitle || article.data.title} | IBC Academy`}
+  description={article.data.seoDescription || article.data.description}
+>
+  <Section>
+    <article class="article-container">
+      <!-- Article Header -->
+      <header class="article-header">
+        {article.data.series && (
+          <a href={`/paths/${article.data.series}`} class="series-badge">
+            {article.data.series === 'just-curious' ? '🔍 Just Curious' : article.data.series} — Article {article.data.seriesOrder} of 6
+          </a>
+        )}
+        <h1 class="article-title">{article.data.title}</h1>
+        <div class="article-meta">
+          <span class="article-author">{article.data.author}</span>
+          <span class="article-date">{formattedDate}</span>
+        </div>
+      </header>
+
+      <!-- Article Body -->
+      <div class="article-body prose">
+        <Content />
+      </div>
+
+      <!-- Series Navigation -->
+      {article.data.series && (
+        <nav class="series-nav">
+          <div class="series-nav-inner">
+            {prevArticle ? (
+              <a href={`/learn/articles/${prevArticle.id}`} class="series-nav-link prev">
+                <span class="series-nav-label">← Previous</span>
+                <span class="series-nav-title">{prevArticle.data.title}</span>
+              </a>
+            ) : (
+              <div />
+            )}
+            {nextArticle ? (
+              <a href={`/learn/articles/${nextArticle.id}`} class="series-nav-link next">
+                <span class="series-nav-label">Next →</span>
+                <span class="series-nav-title">{nextArticle.data.title}</span>
+              </a>
+            ) : (
+              <div class="series-nav-link next">
+                <span class="series-nav-label">Journey Complete ✓</span>
+                <span class="series-nav-title">
+                  <a href="/learn/start-here" class="series-cta">Continue to Foundations →</a>
+                </span>
+              </div>
+            )}
+          </div>
+        </nav>
+      )}
+    </article>
+  </Section>
+</PageLayout>
+
+<style>
+  .article-container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .article-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .series-badge {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-gold, #C9A962);
+    background: rgba(201, 169, 98, 0.1);
+    padding: 0.375rem 0.875rem;
+    border-radius: 9999px;
+    margin-bottom: 1.25rem;
+    text-decoration: none;
+    transition: background 0.2s ease;
+  }
+
+  .series-badge:hover {
+    background: rgba(201, 169, 98, 0.2);
+  }
+
+  .article-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2.25rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--color-navy, #1B2A4A);
+    margin: 0 0 1rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .article-title {
+      font-size: 2.75rem;
+    }
+  }
+
+  .article-meta {
+    display: flex;
+    gap: 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #5A6B8A);
+  }
+
+  .article-body {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--color-text-primary, #2D3748);
+  }
+
+  .article-body :global(h2) {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--color-navy, #1B2A4A);
+    margin: 2.5rem 0 1rem 0;
+  }
+
+  .article-body :global(h3) {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--color-navy, #1B2A4A);
+    margin: 2rem 0 0.75rem 0;
+  }
+
+  .article-body :global(p) {
+    margin: 0 0 1.25rem 0;
+  }
+
+  .article-body :global(blockquote) {
+    border-left: 4px solid var(--color-gold, #C9A962);
+    padding: 0.5rem 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--color-text-secondary, #5A6B8A);
+  }
+
+  .article-body :global(strong) {
+    color: var(--color-navy, #1B2A4A);
+    font-weight: 600;
+  }
+
+  .article-body :global(ul), .article-body :global(ol) {
+    margin: 0 0 1.25rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .article-body :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Series Navigation */
+  .series-nav {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(27, 42, 74, 0.1);
+  }
+
+  .series-nav-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .series-nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    background: var(--color-cream, #FAF9F6);
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .series-nav-link:hover {
+    background: rgba(201, 169, 98, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .series-nav-link.next {
+    text-align: right;
+  }
+
+  .series-nav-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-gold, #C9A962);
+  }
+
+  .series-nav-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-navy, #1B2A4A);
+  }
+
+  .series-cta {
+    color: var(--color-navy, #1B2A4A);
+    text-decoration: none;
+  }
+
+  .series-cta:hover {
+    color: var(--color-gold, #C9A962);
+  }
+
+  @media (max-width: 640px) {
+    .series-nav-inner {
+      grid-template-columns: 1fr;
+    }
+
+    .series-nav-link.next {
+      text-align: left;
+    }
+  }
+</style>
