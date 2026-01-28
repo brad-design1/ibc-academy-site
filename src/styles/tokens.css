@@ -10,14 +10,15 @@
      ----------------------------------------------------------------------- */
 
   /* Primary */
-  --color-navy: #1B2A4A;
-  --color-navy-light: #2A3F6B;
-  --color-navy-dark: #0F1D35;
+  --color-navy: #1B365D;
+  --color-navy-light: #24466F;
+  --color-navy-dark: #0F1F35;
+  --color-navy-900: #0A1628;
 
   /* Accent */
-  --color-gold: #C8962E;
-  --color-gold-light: #E8B94A;
-  --color-gold-dark: #A67B22;
+  --color-gold: #C9A84C;
+  --color-gold-light: #D4B96A;
+  --color-gold-dark: #A8893A;
 
   /* Neutrals */
   --color-white: #FFFFFF;
@@ -88,4 +89,6 @@
      ----------------------------------------------------------------------- */
   --font-heading: "Playfair Display", serif;
   --font-body: "Inter", sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-serif: "Georgia", "Times New Roman", serif;
 }

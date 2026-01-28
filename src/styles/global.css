@@ -129,12 +129,12 @@ html {
 }
 
 body {
-  font-family: var(--font-body);
+  font-family: var(--font-sans, var(--font-body));
   font-weight: 400;
   font-size: 1.125rem;      /* 18px desktop base — per typography spec */
   line-height: 1.7;
-  color: var(--text-primary);
-  background-color: var(--bg-primary);
+  color: var(--color-slate-200, var(--text-primary));
+  background-color: var(--color-navy-900, var(--bg-primary));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -324,3 +324,151 @@ blockquote,
 dl, dd {
   margin: 0;
 }
+
+/* -------------------------------------------------------------------------
+   Scroll Animations — Fade-in variants triggered by IntersectionObserver
+   ------------------------------------------------------------------------- */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+.fade-in-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-in-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+.fade-in-left.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-in-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+.fade-in-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.7s ease-out;
+}
+.fade-in.is-visible {
+  opacity: 1;
+}
+
+/* -------------------------------------------------------------------------
+   Stagger Children Animation
+   ------------------------------------------------------------------------- */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.stagger-children.is-visible > :nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0s; }
+.stagger-children.is-visible > :nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
+.stagger-children.is-visible > :nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.2s; }
+.stagger-children.is-visible > :nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.3s; }
+.stagger-children.is-visible > :nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 0.4s; }
+.stagger-children.is-visible > :nth-child(6) { opacity: 1; transform: translateY(0); transition-delay: 0.5s; }
+.stagger-children.is-visible > :nth-child(7) { opacity: 1; transform: translateY(0); transition-delay: 0.6s; }
+.stagger-children.is-visible > :nth-child(8) { opacity: 1; transform: translateY(0); transition-delay: 0.7s; }
+.stagger-children.is-visible > :nth-child(9) { opacity: 1; transform: translateY(0); transition-delay: 0.8s; }
+.stagger-children.is-visible > :nth-child(10) { opacity: 1; transform: translateY(0); transition-delay: 0.9s; }
+
+/* -------------------------------------------------------------------------
+   Glass Card — Frosted glass effect for cards
+   ------------------------------------------------------------------------- */
+.glass-card {
+  background: rgba(27, 54, 93, 0.15);
+  border: 1px solid rgba(36, 70, 111, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+.glass-card:hover {
+  border-color: rgba(201, 168, 76, 0.35);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(201, 168, 76, 0.1);
+}
+
+/* -------------------------------------------------------------------------
+   Glass Surface — Lighter glass effect
+   ------------------------------------------------------------------------- */
+.glass-surface {
+  background: rgba(27, 54, 93, 0.1);
+  border: 1px solid rgba(36, 70, 111, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* -------------------------------------------------------------------------
+   Portrait Desaturated — Masters photos hover effect
+   ------------------------------------------------------------------------- */
+.portrait-desaturated {
+  filter: grayscale(100%) brightness(0.7);
+  transition: filter 0.5s, transform 0.5s;
+}
+.portrait-desaturated:hover {
+  filter: grayscale(0%) brightness(1);
+  transform: scale(1.05);
+}
+
+/* -------------------------------------------------------------------------
+   Masters Scrolling Columns
+   ------------------------------------------------------------------------- */
+.masters-col,
+.masters-track {
+  will-change: transform;
+}
+.masters-track img {
+  transition: filter 0.7s, transform 0.5s;
+}
+.masters-track img:hover {
+  transform: scale(1.03);
+  filter: grayscale(0%) brightness(1) !important;
+}
+
+/* -------------------------------------------------------------------------
+   Horizontal Scroll — Hide scrollbar
+   ------------------------------------------------------------------------- */
+.horizontal-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.horizontal-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* -------------------------------------------------------------------------
+   Gold Shimmer Animation
+   ------------------------------------------------------------------------- */
+@keyframes shimmer {
+  0% { background-position: -200%; }
+  100% { background-position: 200%; }
+}
+.gold-shimmer {
+  background: linear-gradient(90deg, var(--color-gold) 0%, var(--color-gold-light) 40%, #fff 50%, var(--color-gold-light) 60%, var(--color-gold) 100%);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+/* -------------------------------------------------------------------------
+   Prose Styles for Article Content
+   ------------------------------------------------------------------------- */
+.prose p { margin-bottom: 1.5em !important; }
+.prose h2 { color: #fff !important; margin-top: 2.5rem !important; margin-bottom: 1rem !important; font-size: 1.75rem !important; font-weight: 700 !important; }
+.prose h3 { color: #fff !important; margin-top: 2rem !important; margin-bottom: 0.75rem !important; font-size: 1.375rem !important; font-weight: 600 !important; }
+.prose h4 { color: #fff !important; margin-top: 1.5rem !important; margin-bottom: 0.5rem !important; font-size: 1.125rem !important; font-weight: 600 !important; }
