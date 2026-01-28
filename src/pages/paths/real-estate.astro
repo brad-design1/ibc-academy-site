@@ -1,0 +1,444 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import Section from '../../components/sections/Section.astro';
+import CTABanner from '../../components/sections/CTABanner.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+import ScrollReveal from '../../components/animation/ScrollReveal.astro';
+---
+
+<PageLayout
+  title="Fund Deals on Your Terms | IBC Academy"
+  description="For real estate investors and deal makers who are tired of asking banks for permission. Learn to become your own capital source with the Infinite Banking Concept."
+>
+  <!-- Hero Section -->
+  <Section background="cream">
+    <ScrollReveal direction="up">
+      <div class="hero-content">
+        <span class="hero-eyebrow">For Investors & Deal Makers</span>
+        <h1 class="hero-title">Stop Asking Permission <br />to Access Your Own Money.</h1>
+        <p class="hero-text">
+          You found the deal. You ran the numbers. The margins are there. But the bank needs 30 days, a mountain of paperwork, and the right to say no.
+        </p>
+        <p class="hero-text">
+          Meanwhile, someone else wires the earnest money and takes your deal.
+        </p>
+        <p class="hero-text">
+          This six-article path shows you how serious real estate investors build a personal capital reservoir — available in days, no credit check, no one to ask — so they never lose a deal to timing again.
+        </p>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- What This Is (And Isn't) -->
+  <Section title="What This Journey Is (And Isn't)">
+    <ScrollReveal direction="up">
+      <div class="clarity-content">
+        <div class="clarity-grid">
+          <div class="clarity-box">
+            <h3 class="clarity-heading is-not">This is NOT:</h3>
+            <ul class="clarity-list">
+              <li>A way to skip saving or building capital</li>
+              <li>A replacement for underwriting deals properly</li>
+              <li>A leverage trick or arbitrage scheme</li>
+              <li>Something that works overnight</li>
+              <li>A pitch to sell you a life insurance policy</li>
+            </ul>
+          </div>
+          <div class="clarity-box">
+            <h3 class="clarity-heading is-yes">This IS:</h3>
+            <ul class="clarity-list">
+              <li>A strategy for controlling your own capital</li>
+              <li>How to move faster than your competition</li>
+              <li>The banking function — applied to deal flow</li>
+              <li>A system real investors actually use</li>
+              <li>Free education with no strings attached</li>
+            </ul>
+          </div>
+        </div>
+        <p class="clarity-footer">
+          By the end, you'll understand how to fund deals without asking a bank, a hard money lender, or a partner for permission. Whether you implement it is up to you.
+        </p>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- The 6 Articles -->
+  <Section title="Your 6-Article Journey" subtitle="Each article takes about 8-10 minutes to read. Written for people who think in terms of deals, returns, and capital deployment." background="cream">
+    <div class="journey-grid">
+      <ScrollReveal direction="up" delay={0}>
+        <a href="/learn/articles/real-estate-01-capital-problem" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">01</span>
+            <h3 class="journey-title">The Capital Problem</h3>
+            <p class="journey-desc">Every deal starts with the same bottleneck: asking someone else for money. Here's why that's the real risk in your portfolio.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={100}>
+        <a href="/learn/articles/real-estate-02-banks-real-game" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">02</span>
+            <h3 class="journey-title">What Banks Are Really Doing</h3>
+            <p class="journey-desc">You deposit at 0.5%. They lend at 7-12%. You're not their customer — you're their capital. Here's how to play their game instead.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={200}>
+        <a href="/learn/articles/real-estate-03-opportunity-cost" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">03</span>
+            <h3 class="journey-title">The Deal You Missed</h3>
+            <p class="journey-desc">Your money was locked in a 401(k), tied up in escrow, or sitting in a HELOC the bank froze. Opportunity cost isn't theoretical — it's that deal.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={300}>
+        <a href="/learn/articles/real-estate-04-policy-loan-mechanics" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">04</span>
+            <h3 class="journey-title">Policy Loans for Real Estate</h3>
+            <p class="journey-desc">No credit check. No income verification. No explanation required. Here's exactly how policy loans work — mechanically, not theoretically.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={400}>
+        <a href="/learn/articles/real-estate-05-infinite-capital" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">05</span>
+            <h3 class="journey-title">The Infinite Capital Strategy</h3>
+            <p class="journey-desc">Borrow, deploy, recover, repeat. Why IBC investors never run out of deal money — and why the math keeps compounding in their favor.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={500}>
+        <a href="/learn/articles/real-estate-06-two-businesses" class="journey-card-link">
+          <div class="journey-card">
+            <span class="journey-number">06</span>
+            <h3 class="journey-title">Running Two Businesses</h3>
+            <p class="journey-desc">Your investment portfolio is one business. Your banking system is the other. The most successful IBC investors treat them both seriously.</p>
+          </div>
+        </a>
+      </ScrollReveal>
+    </div>
+  </Section>
+
+  <!-- Why This Matters -->
+  <Section title="Why Bother?">
+    <ScrollReveal direction="up">
+      <div class="why-content">
+        <p class="why-text">
+          Here's the question every deal maker eventually faces:
+        </p>
+        <blockquote class="why-quote">
+          "The problem with your money is that it's in someone else's vault — and they decide when you get to use it."
+        </blockquote>
+        <p class="why-attribution">— Adapted from Nelson Nash, <em>Becoming Your Own Banker</em></p>
+        <p class="why-text">
+          Think about your last deal. How much time did you spend finding it versus funding it?
+        </p>
+        <p class="why-text">
+          Most real estate investors are excellent at finding opportunity. They're terrible at maintaining access to capital. They fund deals with HELOCs that can be frozen, hard money at 12% plus points, or partners who take 50% of the upside for providing the down payment.
+        </p>
+        <p class="why-text">
+          There's another way. A forester from Alabama named Nelson Nash figured it out — and real estate investors have been quietly using his system for decades.
+        </p>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- CTA Section -->
+  <Section background="cream">
+    <ScrollReveal direction="up">
+      <div class="cta-content">
+        <h2 class="cta-title">Ready to Start?</h2>
+        <p class="cta-text">
+          Article 1 lays out the capital problem every investor faces. No signup required. No email capture. Just read.
+        </p>
+        <div class="cta-button">
+          <Button variant="primary" size="lg" href="/learn/articles/real-estate-01-capital-problem">
+            Begin Article 1 →
+          </Button>
+        </div>
+        <p class="cta-note">
+          Already know the basics? Skip ahead to Article 4 for the mechanics of policy loans applied to real estate deals.
+        </p>
+      </div>
+    </ScrollReveal>
+  </Section>
+
+  <!-- Final Note -->
+  <CTABanner
+    heading="Have Questions?"
+    description="Join our free community where 500+ people are learning together. Ask anything. No pressure."
+    buttonText="Join the Conversation"
+    buttonHref="https://skool.com/ibc-academy"
+  />
+</PageLayout>
+
+<style>
+  /* Hero Section */
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #F59E0B;
+    margin-bottom: 1rem;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2.25rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--color-navy, #1B2A4A);
+    margin: 0 0 1.5rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .hero-title {
+      font-size: 3rem;
+    }
+  }
+
+  .hero-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 1rem 0;
+  }
+
+  .hero-text:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Clarity Section */
+  .clarity-content {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .clarity-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .clarity-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .clarity-box {
+    background: var(--color-cream, #FAF9F6);
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .clarity-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+  }
+
+  .clarity-heading.is-not {
+    color: var(--color-text-secondary, #5A6B8A);
+  }
+
+  .clarity-heading.is-yes {
+    color: var(--color-navy, #1B2A4A);
+  }
+
+  .clarity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .clarity-list li {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary, #5A6B8A);
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .clarity-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #F59E0B;
+  }
+
+  .clarity-footer {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* Journey Section */
+  .journey-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .journey-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .journey-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .journey-card-link {
+    text-decoration: none;
+    display: block;
+  }
+
+  .journey-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(27, 42, 74, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .journey-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(27, 42, 74, 0.12);
+  }
+
+  .journey-number {
+    display: inline-block;
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #F59E0B;
+    margin-bottom: 0.75rem;
+  }
+
+  .journey-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-navy, #1B2A4A);
+    margin: 0 0 0.75rem 0;
+  }
+
+  .journey-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0;
+  }
+
+  /* Why Section */
+  .why-content {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .why-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 1.25rem 0;
+  }
+
+  .why-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--color-navy, #1B2A4A);
+    margin: 2rem 0 0.75rem 0;
+    padding: 0 1rem;
+    border-left: 4px solid #F59E0B;
+    text-align: left;
+  }
+
+  @media (min-width: 768px) {
+    .why-quote {
+      font-size: 1.75rem;
+      padding: 0 2rem;
+    }
+  }
+
+  .why-attribution {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 2rem 0;
+    text-align: left;
+    padding-left: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .why-attribution {
+      padding-left: 2rem;
+    }
+  }
+
+  /* CTA Section */
+  .cta-content {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2rem;
+    color: var(--color-navy, #1B2A4A);
+    margin: 0 0 1rem 0;
+  }
+
+  .cta-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #5A6B8A);
+    margin: 0 0 2rem 0;
+  }
+
+  .cta-button {
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-note {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #5A6B8A);
+    font-style: italic;
+    margin: 0;
+  }
+</style>
